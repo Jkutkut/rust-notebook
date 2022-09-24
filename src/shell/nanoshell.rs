@@ -9,6 +9,7 @@ pub struct Nanoshell<'a> {
 impl Nanoshell<'_> {
 
     pub fn run(&self) {
+        self.clear_screen();
         self.print(self.title);
 
         let mut input: String;
@@ -18,12 +19,24 @@ impl Nanoshell<'_> {
                 "exit" => break,
                 "clear" => self.clear_screen(),
                 "" => {},
-                _ => self.print("Command not found\n"),
+                _ => self.handle_cmd(input),
             }
         }
 
         self.print("Exiting Shell\n");
     }
+
+    fn handle_cmd(&self, cmd: String) {
+        // TODO
+        print!("handleling '{cmd}'\n"); // TODO debug
+        self.cmd_not_found();
+    }
+
+    fn cmd_not_found(&self) {
+        self.print("Command not found\n");
+    }
+
+    // Input
 
     fn get_input(&self) -> String {
         let mut r = String::new();
@@ -34,6 +47,9 @@ impl Nanoshell<'_> {
         r = r[..r.len() - 1].to_string(); // Remove \n
         r
     }
+
+
+    // Output
 
     fn print(&self, text: &str) {
         print!("{text}");
