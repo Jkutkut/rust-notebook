@@ -15,11 +15,9 @@ impl Nanoshell<'_> {
         //self.clear_screen(); // TODO remove
         self.print(self.title);
 
-        let mut input: String;
         let mut running: bool = true;
         while running {
-            input = self.get_input();
-            running = self.handle_cmd(input);
+            running = self.handle_cmd(self.get_input());
         }
 
         self.print("Exiting Shell\n");
