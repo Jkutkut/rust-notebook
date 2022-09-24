@@ -10,10 +10,21 @@ impl Nanoshell<'_> {
 
     pub fn run(&self) {
         self.print(self.title);
-        self.print(&self.get_input());
+
+        let mut input: String;
+        loop {
+            input = self.get_input();
+            match input.as_str() {
+                "exit\n" => break,
+                _ => self.print("Command not found\n"),
+            }
+        }
+
+        self.print("Exiting Shell\n");
     }
 
     fn get_input(&self) -> String {
+        // TODO remove \n
         let mut r = String::new();
         self.print(self.promt);
         io::stdin()
