@@ -1,35 +1,43 @@
 use std::io;
 use std::io::Write;
 
+use super::shell_handler::ShellHandler;
+
 pub struct Nanoshell<'a> {
     pub title: &'a str,
     pub promt: &'a str,
+    pub cmd_handler: ShellHandler,
 }
 
 impl Nanoshell<'_> {
 
     pub fn run(&self) {
-        self.clear_screen();
+        //self.clear_screen(); // TODO remove
         self.print(self.title);
 
         let mut input: String;
-        loop {
+        let mut running: bool = true;
+        while running {
             input = self.get_input();
-            match input.as_str() {
-                "exit" => break,
-                "clear" => self.clear_screen(),
-                "" => {},
-                _ => self.handle_cmd(input),
-            }
+            running = self.handle_cmd(input);
         }
 
         self.print("Exiting Shell\n");
     }
 
-    fn handle_cmd(&self, cmd: String) {
-        // TODO
-        print!("handleling '{cmd}'\n"); // TODO debug
-        self.cmd_not_found();
+    fn handle_cmd(&self, cmd: String) -> bool {
+        match cmd.as_str() {
+            "exit" => return false,
+            "clear" => self.clear_screen(),
+            "" => {},
+            _ => {
+                print!("handleling '{cmd}'\n"); // TODO debug
+                if !self.cmd_handler.handle(cmd) {
+                    self.cmd_not_found();
+                }
+            },
+        }
+        return true;
     }
 
     fn cmd_not_found(&self) {
