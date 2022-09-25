@@ -1,4 +1,7 @@
+use std::collections::HashMap;
+
 use crate::shell::shell_handler::FtDictEntry;
+
 
 pub fn notebook_cmds() -> Box<[FtDictEntry]> {
     Box::new([
@@ -24,8 +27,26 @@ pub fn notebook_cmds() -> Box<[FtDictEntry]> {
 // Functions
 
 pub fn do_nothing(cmd: String) {
-    print!("Doing nothing... cmd: '{cmd}'\n");
+    print!("Doing nothing... cmd: '{cmd}' -> Not implemented.\n");
 }
 
 
+// NotebookEntry
+struct NotebookEntry {
+    name: String,
+    description: String,
+}
+
+// Notebook
+pub struct Notebook {
+    // file, // TODO
+    notes: HashMap<String, NotebookEntry>,
+}
+
+impl Notebook {
+    pub fn list(&self, cmd: String) {
+        print!("TODO");
+        // TODO
+    }
+}
 
