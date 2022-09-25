@@ -51,7 +51,7 @@ impl Nanoshell<'_> {
 
     // Input
 
-    fn get_input(&self) -> String {
+    pub fn get_input(&self) -> String {
         let mut r = String::new();
         self.print(self.promt);
         io::stdin()
@@ -71,11 +71,11 @@ impl Nanoshell<'_> {
         }
     }
 
-    fn print(&self, text: &str) {
+    pub fn print(&self, text: &str) {
         self.print_stdout(text, true);
     }
 
-    fn print_buffered(&self, text: &str) {
+    pub fn print_buffered(&self, text: &str) {
         self.print_stdout(text, false);
     }
 
