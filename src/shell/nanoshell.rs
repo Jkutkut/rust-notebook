@@ -25,11 +25,10 @@ impl Nanoshell<'_> {
 
     fn handle_cmd(&self, cmd: String) -> bool {
         match cmd.as_str() {
+            "" => {},
             "exit" => return false,
             "clear" => self.clear_screen(),
-            "" => {},
             _ => {
-                print!("handleling '{cmd}'\n"); // TODO debug
                 if !self.cmd_handler.handle(cmd) {
                     self.cmd_not_found();
                 }

@@ -9,7 +9,8 @@ fn main() {
         title: "Rust-Notebook\n\n",
         promt: "$> ",
         cmd_handler: ShellHandler{
-            cmd_dict: Box::new([]),// TODO
+            // cmd_dict: Box::new([]),
+            cmd_dict: notebook::notebook_cmds(),
         },
     };
 

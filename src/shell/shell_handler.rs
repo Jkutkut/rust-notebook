@@ -1,9 +1,7 @@
 pub struct FtDictEntry {
-    name: String,
-    ft: fn(cmd: String),
+    pub name: String,
+    pub ft: fn(cmd: String),
 }
-
-
 
 pub struct ShellHandler {
     pub cmd_dict: Box<[FtDictEntry]>,
