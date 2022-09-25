@@ -11,31 +11,38 @@ pub struct Nanoshell<'a> {
 
 impl Nanoshell<'_> {
 
-    pub fn run(&self) {
+    pub fn init(&self) {
         //self.clear_screen(); // TODO remove
         self.print(self.title);
-
-        let mut running: bool = true;
-        while running {
-            running = self.handle_cmd(self.get_input());
-        }
-
-        self.print("Exiting Shell\n");
     }
 
-    fn handle_cmd(&self, cmd: String) -> bool {
+    pub fn run(&self) -> String {
+        let mut result: Option<String>;
+        loop {
+            result = self.handle_cmd(self.get_input());
+            match result {
+                None => {},
+                Some(cmd) => return cmd,
+            }
+        }
+    }
+
+    fn handle_cmd(&self, cmd: String) -> Option<String> {
         match cmd.as_str() {
             "" => {},
-            "exit" => return false,
+            "exit" => return Some(cmd),
             "clear" => self.clear_screen(),
             "help" => self.help(),
             _ => {
-                if !self.cmd_handler.handle(cmd) {
+                if self.cmd_handler.is_cmd(&cmd) {
+                    return Some(cmd);
+                }
+                else {
                     self.cmd_not_found();
                 }
             },
         }
-        return true;
+        return None;
     }
 
     fn cmd_not_found(&self) {

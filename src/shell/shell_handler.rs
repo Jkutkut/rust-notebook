@@ -1,6 +1,5 @@
 pub struct FtDictEntry {
     pub name: String,
-    pub ft: fn(cmd: String),
     pub man: String,
 }
 
@@ -9,10 +8,9 @@ pub struct ShellHandler {
 }
 
 impl ShellHandler {
-    pub fn handle(&self, cmd: String) -> bool {
+    pub fn is_cmd(&self, cmd: &String) -> bool {
         for f in self.cmd_dict.iter() {
-            if f.name.eq(&cmd) {
-                (f.ft)(cmd);
+            if f.name.eq(cmd) {
                 return true;
             }
         }
