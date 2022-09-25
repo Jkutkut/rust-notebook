@@ -1,6 +1,7 @@
 pub struct FtDictEntry {
     pub name: String,
     pub ft: fn(cmd: String),
+    pub man: String,
 }
 
 pub struct ShellHandler {

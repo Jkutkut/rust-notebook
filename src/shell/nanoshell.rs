@@ -28,6 +28,7 @@ impl Nanoshell<'_> {
             "" => {},
             "exit" => return false,
             "clear" => self.clear_screen(),
+            "help" => self.help(),
             _ => {
                 if !self.cmd_handler.handle(cmd) {
                     self.cmd_not_found();
@@ -56,15 +57,55 @@ impl Nanoshell<'_> {
 
     // Output
 
-    fn print(&self, text: &str) {
+    fn print_stdout(&self, text: &str, flush: bool) {
         print!("{text}");
-        io::stdout().flush().unwrap();
+        if flush {
+            io::stdout().flush().unwrap();
+        }
     }
+
+    fn print(&self, text: &str) {
+        self.print_stdout(text, true);
+    }
+
+    fn print_buffered(&self, text: &str) {
+        self.print_stdout(text, false);
+    }
+
+    // Commands
 
     fn clear_screen(&self) {
         let esc_char: char = 27 as char;
         // 033[H -> Set cursor on home position.
         // 033[2J -> Clear screen.
         print!("{esc_char}[H{esc_char}[2J");
+    }
+
+    fn help(&self) {
+        self.clear_screen();
+        self.print_buffered("Help manual:\n\n");
+        self.help_cmd(
+            "clear",
+            "Clears the terminal screen."
+        );
+        self.help_cmd(
+            "help",
+            "Shows the help menu."
+        );
+        self.help_cmd(
+            "exit",
+            "Exits the program."
+        );
+        for cmd in self.cmd_handler.cmd_dict.iter() {
+            self.help_cmd(&*cmd.name, &*cmd.man);
+        }
+    }
+
+    fn help_cmd(&self, cmd: &str, man: &str) {
+        self.print_buffered(self.promt);
+        self.print_buffered(cmd);
+        self.print_buffered("\n  ");
+        self.print_buffered(man);
+        self.print_buffered("\n\n");
     }
 }
