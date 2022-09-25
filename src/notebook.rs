@@ -34,6 +34,7 @@ pub struct Notebook<'a> {
 }
 
 impl Notebook<'_> {
+    // TODO implement on nanoshell the ask method and refactor questions
 
     pub fn run(&mut self) {
         self.shell.init();
@@ -85,8 +86,20 @@ impl Notebook<'_> {
         );
     }
 
-    fn remove(&self) {
-        self.do_nothing();
+    fn remove(&mut self) {
+        self.shell.print("Name:\n  ");
+        let name: String = self.shell.get_input();
+
+        if !self.notes.contains_key(&name) {
+            self.shell.print_buffered("Note '");
+            self.shell.print_buffered(&name);
+            self.shell.print("' does not exists.\n");
+        }
+        else {
+            self.notes.remove(&name);
+            self.shell.print_buffered(&name);
+            self.shell.print(" removed.\n");
+        }
     }
 }
 
