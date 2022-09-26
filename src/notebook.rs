@@ -34,8 +34,6 @@ pub struct Notebook<'a> {
 }
 
 impl Notebook<'_> {
-    // TODO implement on nanoshell the ask method and refactor questions
-
     pub fn run(&mut self) {
         self.shell.init();
         let mut cmd: String;
@@ -54,10 +52,6 @@ impl Notebook<'_> {
 
     // Commands
 
-    fn do_nothing(&self) {
-        print!("Not implemented\n"); // TODO remove method
-    }
-
     fn list(&self) {
         self.shell.print_buffered("List:\n--------------------------\n");
         for (_, entry) in &self.notes {
@@ -71,11 +65,8 @@ impl Notebook<'_> {
     }
 
     fn add(&mut self) {
-        self.shell.print("Name:\n  ");
-        let name: String = self.shell.get_input();
-        
-        self.shell.print("Description:\n  ");
-        let description: String = self.shell.get_input();
+        let name: String = self.shell.ask("Name:\n  ");
+        let description: String = self.shell.ask("Description:\n  ");
 
         self.notes.insert(
             String::from(&name),
@@ -102,4 +93,3 @@ impl Notebook<'_> {
         }
     }
 }
-

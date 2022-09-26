@@ -61,6 +61,11 @@ impl Nanoshell<'_> {
         r
     }
 
+    pub fn ask(&self, question: &str) -> String {
+        self.print(question);
+        self.get_input()
+    }
+
 
     // Output
 

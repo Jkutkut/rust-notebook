@@ -5,7 +5,7 @@ A simple, command used, notebook/agenda program to keep all your notes organized
 ## Usage:
 - ```list```: Show all the elements.
 - ```add```: Opens a form to fill all the data.
-- ```remove XXXX```: Removes a element by name.
+- ```remove```: Removes a element by name.
 - ```help```: Show the usage menu.
 - ```clear```: Clear the terminal.
 - ```exit```: Exit the program.
