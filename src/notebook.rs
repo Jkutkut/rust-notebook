@@ -30,9 +30,9 @@ pub struct NotebookEntry {
 
 // Notebook
 pub struct Notebook<'a> {
-    file: &'a str,
-    notes: HashMap<String, NotebookEntry>,
-    shell: Nanoshell<'a>,
+    pub file: &'a str,
+    pub notes: HashMap<String, NotebookEntry>,
+    pub shell: Nanoshell<'a>,
 }
 
 impl Notebook<'_> {
