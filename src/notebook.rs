@@ -4,6 +4,7 @@ use crate::shell::shell_handler::FtDictEntry;
 use crate::shell::nanoshell::Nanoshell;
 
 use crate::notebook_json::notebook_save;
+use crate::notebook_json::notebook_load;
 
 pub fn notebook_cmds() -> Box<[FtDictEntry]> {
     Box::new([
@@ -36,8 +37,8 @@ pub struct Notebook<'a> {
 }
 
 impl Notebook<'_> {
-    pub fn init(&self) {
-        // TODO recover session
+    pub fn init(&mut self) {
+        notebook_load(self.file, &mut self.notes);
     }
 
     pub fn run(&mut self) {
@@ -54,7 +55,6 @@ impl Notebook<'_> {
             }
         }
         self.save_session();
-        self.shell.print("Exiting Notebook\n");
     }
 
     // Commands
