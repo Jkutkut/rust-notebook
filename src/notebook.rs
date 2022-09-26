@@ -3,6 +3,8 @@ use std::collections::HashMap;
 use crate::shell::shell_handler::FtDictEntry;
 use crate::shell::nanoshell::Nanoshell;
 
+use crate::notebook_json::notebook_save;
+
 pub fn notebook_cmds() -> Box<[FtDictEntry]> {
     Box::new([
         FtDictEntry {
@@ -28,7 +30,7 @@ pub struct NotebookEntry {
 
 // Notebook
 pub struct Notebook<'a> {
-    // file, // TODO
+    pub file: &'a str,
     pub notes: HashMap<String, NotebookEntry>,
     pub shell: Nanoshell<'a>,
 }
@@ -47,6 +49,7 @@ impl Notebook<'_> {
                 &_ => todo!(),
             }
         }
+        self.save_session();
         self.shell.print("Exiting Notebook\n");
     }
 
@@ -91,5 +94,10 @@ impl Notebook<'_> {
             self.shell.print_buffered(&name);
             self.shell.print(" removed.\n");
         }
+    }
+
+    // Session
+    fn save_session(&self) {
+        notebook_save(self.file, &self.notes);
     }
 }
