@@ -30,12 +30,16 @@ pub struct NotebookEntry {
 
 // Notebook
 pub struct Notebook<'a> {
-    pub file: &'a str,
-    pub notes: HashMap<String, NotebookEntry>,
-    pub shell: Nanoshell<'a>,
+    file: &'a str,
+    notes: HashMap<String, NotebookEntry>,
+    shell: Nanoshell<'a>,
 }
 
 impl Notebook<'_> {
+    pub fn init(&self) {
+        // TODO recover session
+    }
+
     pub fn run(&mut self) {
         self.shell.init();
         let mut cmd: String;

@@ -1,0 +1,17 @@
+{
+	"version": "0.2.0",
+	"notes": [
+		{
+			"name": "Nota 1",
+			"description": "Descripción de la nota 1"
+		},
+		{
+			"name": "Nota 2",
+			"description": "Descripción de la nota 2"
+		},
+		{
+			"name": "Nota 3",
+			"description": "Descripción de la nota 3"
+		}
+	]
+}
