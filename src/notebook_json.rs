@@ -8,6 +8,12 @@ use crate::notebook::NotebookEntry;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
+#[derive(Serialize, Deserialize)]
+struct NotebookJSON {
+    version: String,
+    notes: Vec<NotebookEntry>,
+}
+
 fn notebook_hashm2vec(notes: &HashMap<String, NotebookEntry>) -> Vec<NotebookEntry> {
     let len = notes.keys().len();
     let mut n = Vec::with_capacity(len);
@@ -18,12 +24,6 @@ fn notebook_hashm2vec(notes: &HashMap<String, NotebookEntry>) -> Vec<NotebookEnt
         });
     }
     n
-}
-
-#[derive(Serialize, Deserialize)]
-struct NotebookJSON {
-    version: String,
-    notes: Vec<NotebookEntry>,
 }
 
 pub fn notebook_save(filename: &str, notes: &HashMap<String, NotebookEntry>) {

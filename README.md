@@ -10,8 +10,6 @@ A simple, command used, notebook/agenda program to keep all your notes organized
 - ```clear```: Clear the terminal.
 - ```exit```: Exit the program.
 
-
-
 ## Compilation:
 
 The compilation of the program is done with cargo.
@@ -33,6 +31,7 @@ You can also use ```cargo run``` to build and run directly the program.
 - [TODO] Subcategory: value o general.
 
 ## Future features:
+- Refactorization.
 - Categories to keep elements categorized.
 - Subcategories in each category.
 
