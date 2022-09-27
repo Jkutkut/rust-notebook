@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use serde::{Deserialize, Serialize};
 
 use crate::shell::shell_handler::FtDictEntry;
 use crate::shell::nanoshell::Nanoshell;
@@ -7,6 +8,7 @@ use crate::notebook_json::notebook_save;
 use crate::notebook_json::notebook_load;
 
 pub fn notebook_cmds() -> Box<[FtDictEntry]> {
+    // TODO refactor to use Vectors
     Box::new([
         FtDictEntry {
             name: String::from("list"),
@@ -24,6 +26,7 @@ pub fn notebook_cmds() -> Box<[FtDictEntry]> {
 }
 
 // NotebookEntry
+#[derive(Serialize, Deserialize)]
 pub struct NotebookEntry {
     pub name: String,
     pub description: String,
@@ -31,6 +34,7 @@ pub struct NotebookEntry {
 
 // Notebook
 pub struct Notebook<'a> {
+    // TODO refactor with custom constructor
     pub file: &'a str,
     pub notes: HashMap<String, NotebookEntry>,
     pub shell: Nanoshell<'a>,

@@ -1,3 +1,4 @@
+extern crate serde;
 use std::collections::HashMap;
 
 mod notebook;
