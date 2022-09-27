@@ -1,4 +1,6 @@
 use serde::{Serialize, Deserialize};
+use serde_json::Result;
+
 use HashMap;
 use std::fs;
 
@@ -40,31 +42,28 @@ pub fn notebook_save(filename: &str, notes: &HashMap<String, NotebookEntry>) {
 
 pub fn notebook_load(filename: &str, notes: &mut HashMap<String, NotebookEntry>) {
     print!("Restoring previous session...");
-    notes.insert(String::from("Obj1"), NotebookEntry {
-        name: String::from("Obj1"),
-        description: String::from("desc obj1"),
-    });
-    notes.insert(String::from("Obj2"), NotebookEntry {
-        name: String::from("Obj2"),
-        description: String::from("desc obj1"),
-    });
-    notes.insert(String::from("Obj3"), NotebookEntry {
-        name: String::from("Obj3"),
-        description: String::from("desc obj1"),
-    });
-    notes.insert(String::from("Obj4"), NotebookEntry {
-        name: String::from("Obj4"),
-        description: String::from("desc obj1"),
-    });
-    // TODO implement
     let previous: String = fs::read_to_string(filename).unwrap_or(String::new());
     if previous.len() == 0 {
         print!(" No session found\n");
         return;
     }
-    // let parse = json::parse(previous);
-    // for n in parse["notes"] {
-    //     print!("Note: {{name: {}, desc: {}}}\n", n["name"], n["description"]);
-    // }
-    print!(" Session (NOT) restored. Yet.\n"); // TODO change
+    let jresult: Result<NotebookJSON> = serde_json::from_str(&previous);
+
+    match jresult {
+        Err(e) => {
+            print!("\nNot able to restore the session. There was an error with the file\n");
+            print!("Error:\n  {:?}\n", e);
+            print!("File:\n  {previous}\n");
+        },
+        Ok(notes_json) => {
+            print!(" (v{})", notes_json.version);
+            for n in notes_json.notes {
+                notes.insert(
+                    String::from(&n.name),
+                    n
+                );
+            }
+            print!(" Session restored.\n");
+        },
+    };
 }
