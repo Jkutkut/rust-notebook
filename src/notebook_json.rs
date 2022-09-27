@@ -6,27 +6,28 @@ use crate::notebook::NotebookEntry;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
-fn notebook_hashm2vec(notes: &HashMap<String, NotebookEntry>) -> Vec<&NotebookEntry> {
+fn notebook_hashm2vec(notes: &HashMap<String, NotebookEntry>) -> Vec<NotebookEntry> {
     let len = notes.keys().len();
-    let mut n: Vec<&NotebookEntry> = Vec::with_capacity(len);
-    let mut i = 0;
+    let mut n = Vec::with_capacity(len);
     for (_, entry) in notes {
-        n[i] = entry;
-        i = i + 1;
+        n.push(NotebookEntry {
+            name: String::from(&entry.name),
+            description: String::from(&entry.description),
+        });
     }
     n
 }
 
 #[derive(Serialize, Deserialize)]
-struct NotebookJSON<'a> {
-    version: &'a str,
-    notes: Vec<&'a NotebookEntry>,
+struct NotebookJSON {
+    version: String,
+    notes: Vec<NotebookEntry>,
 }
 
 pub fn notebook_save(filename: &str, notes: &HashMap<String, NotebookEntry>) {
     print!("Saving session on {filename}...");
     let data: NotebookJSON = NotebookJSON {
-        version: VERSION,
+        version: String::from(VERSION),
         notes: notebook_hashm2vec(notes),
     };
     let content = serde_json::to_string(&data).unwrap();
