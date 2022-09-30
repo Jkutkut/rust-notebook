@@ -4,7 +4,7 @@ pub struct FtDictEntry {
 }
 
 pub struct ShellHandler {
-    pub cmd_dict: Box<[FtDictEntry]>,
+    pub cmd_dict: Vec<FtDictEntry>,
 }
 
 impl ShellHandler {

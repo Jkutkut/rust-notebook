@@ -7,9 +7,8 @@ use crate::shell::nanoshell::Nanoshell;
 use crate::notebook_json::notebook_save;
 use crate::notebook_json::notebook_load;
 
-pub fn notebook_cmds() -> Box<[FtDictEntry]> {
-    // TODO refactor to use Vectors
-    Box::new([
+pub fn notebook_cmds() -> Vec<FtDictEntry> {
+    vec![
         FtDictEntry {
             name: String::from("list"),
             man: String::from("Show all the elements."),
@@ -22,7 +21,7 @@ pub fn notebook_cmds() -> Box<[FtDictEntry]> {
             name: String::from("remove"),
             man: String::from("Removes a element by name."),
         },
-    ])
+    ]
 }
 
 // NotebookEntry
