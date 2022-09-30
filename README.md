@@ -23,21 +23,16 @@ Executable: ```target/release/rust-notebook```
 You can also use ```cargo run``` to build and run directly the program.
 
 
-
-## Elements:
-- Name
-- Description: optional
-- [TODO] Category
-- [TODO] Subcategory: value o general.
-
-## Future features:
-- Refactorization.
-- Categories to keep elements categorized.
-- Subcategories in each category.
-
-- ```category```:
-	- ```add```
-	- ```remove```
-- Remove category.
-- Remove subcategory.
-- Multiline description
+## TODO
+- [ ] v1.1.0 - Define new data logic to have categories and subcategories.
+- [ ] v1.2.0 - Define new command logic.
+- [ ] v1.3.0 - Implement commands.
+- [ ] v1.4.0 - Implement data logic.
+	- [ ] Data logic.
+	- [ ] Export json.
+	- [ ] Inport json.
+- [ ] v1.5.0 - Integrate commands with data logic.
+- [ ] v1.6.0 - Multiline description.
+- [ ] v1.7.0 - Refactorization and remove TODOs.
+- [ ] v1.8.0 - Clear the screen on init.
+- [ ] v2.0.0 - Documentation and final version.
