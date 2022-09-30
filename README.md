@@ -25,6 +25,7 @@ You can also use ```cargo run``` to build and run directly the program.
 
 ## TODO
 - [ ] v1.1.0 - Define new data logic to have categories and subcategories.
+	- With a simple SQliteDB
 - [ ] v1.2.0 - Define new command logic.
 - [ ] v1.3.0 - Implement commands.
 - [ ] v1.4.0 - Implement data logic.
