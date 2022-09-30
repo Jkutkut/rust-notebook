@@ -3,12 +3,22 @@
 A simple, command used, notebook/agenda program to keep all your notes organized.
 
 ## Usage:
-- ```list```: Show all the elements.
-- ```add```: Opens a form to fill all the data.
-- ```remove```: Removes a element by name.
 - ```help```: Show the usage menu.
 - ```clear```: Clear the terminal.
 - ```exit```: Exit the program.
+- ```list```: Shows all the notes.
+	- ```list category```: Shows the notes in all categories.
+	- ```list category <CATEGORY>```: Shows the notes in a category.
+	- ```list tag```: Shows the notes in all tags.
+	- ```list tag <TAG>```: Shows the notes with a tag.
+- ```add```: Adds notes to DB.
+	- ```add note```: Adds a new note.
+	- ```add category```: Adds a new category.
+	- ```add tag```: Adds a new tag.
+- ```remove```: Removes a element by name.
+	- ```rm note```: Removes a note.
+	- ```rm category```: Removes a category and the notes in that category.
+	- ```rm tag```: Removes a tag and untags all the notes with this tag.
 
 ## Compilation:
 
@@ -24,9 +34,9 @@ You can also use ```cargo run``` to build and run directly the program.
 
 
 ## TODO
-- [ ] v1.1.0 - Define new data logic to have categories and subcategories.
+- [x] v1.1.0 - Define new data logic to have categories and subcategories.
 	- With a simple SQliteDB
-- [ ] v1.2.0 - Define new command logic.
+- [x] v1.2.0 - Define new command logic.
 - [ ] v1.3.0 - Implement commands.
 - [ ] v1.4.0 - Implement data logic.
 	- [ ] Data logic.
