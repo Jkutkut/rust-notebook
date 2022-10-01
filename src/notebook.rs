@@ -1,28 +1,12 @@
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
+use ShellHandler;
 use crate::shell::shell_handler::FtDictEntry;
 use crate::shell::nanoshell::Nanoshell;
 
 use crate::notebook_json::notebook_save;
 use crate::notebook_json::notebook_load;
-
-pub fn notebook_cmds() -> Vec<FtDictEntry> {
-    vec![
-        FtDictEntry {
-            name: String::from("list"),
-            man: String::from("Show all the elements."),
-        },
-        FtDictEntry {
-            name: String::from("add"),
-            man: String::from("Opens a form to fill all the data."),
-        },
-        FtDictEntry {
-            name: String::from("remove"),
-            man: String::from("Removes a element by name."),
-        },
-    ]
-}
 
 // NotebookEntry
 #[derive(Serialize, Deserialize)]
@@ -33,17 +17,47 @@ pub struct NotebookEntry {
 
 // Notebook
 pub struct Notebook<'a> {
-    // TODO refactor with custom constructor
     pub file: &'a str,
     pub notes: HashMap<String, NotebookEntry>,
     pub shell: Nanoshell<'a>,
 }
 
-impl Notebook<'_> {
-    pub fn init(&mut self) {
-        notebook_load(self.file, &mut self.notes);
+impl<'a> Notebook<'a> {
+    fn cmd_dict() -> Vec<FtDictEntry> {
+        vec![
+            FtDictEntry {
+                name: String::from("list"),
+                man: String::from("Show all the elements."),
+            },
+            FtDictEntry {
+                name: String::from("add"),
+                man: String::from("Opens a form to fill all the data."),
+            },
+            FtDictEntry {
+                name: String::from("remove"),
+                man: String::from("Removes a element by name."),
+            },
+        ]
     }
 
+    pub fn new(file: &'a str) -> Self {
+        let mut n = Notebook {
+            file: file,
+            notes: HashMap::new(),
+            shell: Nanoshell {
+                title: "Rust-Notebook\n\n",
+                promt: "$> ", // TODO add color
+                cmd_handler: ShellHandler {
+                    cmd_dict: Notebook::cmd_dict(),
+                },
+            },
+        };
+        notebook_load(n.file, &mut n.notes);
+        n
+    }
+}
+
+impl Notebook<'_> {
     pub fn run(&mut self) {
         self.shell.init();
         let mut cmd: String;
