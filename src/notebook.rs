@@ -28,15 +28,18 @@ impl<'a> Notebook<'a> {
         vec![
             FtDictEntry {
                 name: String::from("list"),
-                man: String::from("Show all the elements."),
+                cmd: String::from("list <category|tag> [CATEGORY|TAG]"),
+                man: String::from("Shows all the notes by categories or by tags."),
             },
             FtDictEntry {
                 name: String::from("add"),
-                man: String::from("Opens a form to fill all the data."),
+                cmd: String::from("add <note|category|tag>"),
+                man: String::from("Adds the selected element."),
             },
             FtDictEntry {
                 name: String::from("remove"),
-                man: String::from("Removes a element by name."),
+                cmd: String::from("remove <note|category|tag>"),
+                man: String::from("Removes the selected element."),
             },
         ]
     }

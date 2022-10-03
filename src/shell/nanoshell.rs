@@ -108,22 +108,30 @@ impl Nanoshell<'_> {
         self.print_buffered("Help manual:\n\n");
         self.help_cmd(
             "clear",
+            "clear",
             "Clears the terminal screen."
         );
         self.help_cmd(
+            "help",
             "help",
             "Shows the help menu."
         );
         self.help_cmd(
             "exit",
+            "exit",
             "Exits the program."
         );
         for cmd in self.cmd_handler.cmd_dict.iter() {
-            self.help_cmd(&*cmd.name, &*cmd.man);
+            self.help_cmd(&*cmd.name, &*cmd.cmd, &*cmd.man);
         }
     }
 
-    fn help_cmd(&self, cmd: &str, man: &str) {
+    fn help_cmd(&self, name: &str, cmd: &str, man: &str) {
+        // TODO generalize COLORS
+        self.print_buffered("\x1b[0;33m");
+        self.print_buffered(name);
+        self.print_buffered("\x1b[0m");
+        self.print_buffered("\n  ");
         self.print_buffered(self.promt);
         self.print_buffered(cmd);
         self.print_buffered("\n  ");

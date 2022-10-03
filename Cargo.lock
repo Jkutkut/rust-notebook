@@ -28,7 +28,7 @@ dependencies = [
 
 [[package]]
 name = "rust-notebook"
-version = "1.2.5"
+version = "1.2.6"
 dependencies = [
  "serde",
  "serde_json",
