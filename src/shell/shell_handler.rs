@@ -1,5 +1,6 @@
 pub struct FtDictEntry {
     pub name: String,
+    // pub cmd: String, // TODO implement
     pub man: String,
 }
 

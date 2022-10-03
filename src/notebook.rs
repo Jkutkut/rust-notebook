@@ -17,9 +17,9 @@ pub struct NotebookEntry {
 
 // Notebook
 pub struct Notebook<'a> {
-    pub file: &'a str,
-    pub notes: HashMap<String, NotebookEntry>,
-    pub shell: Nanoshell<'a>,
+    file: &'a str,
+    notes: HashMap<String, NotebookEntry>,
+    shell: Nanoshell<'a>,
 }
 
 // Constructor
@@ -47,7 +47,7 @@ impl<'a> Notebook<'a> {
             notes: HashMap::new(),
             shell: Nanoshell {
                 title: "Rust-Notebook\n\n",
-                promt: "$> ", // TODO add color
+                promt: "\x1b[38;5;33m$>\x1b[0m ",
                 cmd_handler: ShellHandler {
                     cmd_dict: Notebook::cmd_dict(),
                 },
