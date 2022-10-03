@@ -22,6 +22,7 @@ pub struct Notebook<'a> {
     pub shell: Nanoshell<'a>,
 }
 
+// Constructor
 impl<'a> Notebook<'a> {
     fn cmd_dict() -> Vec<FtDictEntry> {
         vec![
@@ -57,13 +58,14 @@ impl<'a> Notebook<'a> {
     }
 }
 
+// Methods
 impl Notebook<'_> {
     pub fn run(&mut self) {
         self.shell.init();
-        let mut cmd: String;
+        let mut cmd: Vec<String>;
         loop {
             cmd = self.shell.run();
-            match cmd.as_str() {
+            match cmd[0].as_str() {
                 "exit" => break,
                 "list" => self.list(),
                 "add" => self.add(),
@@ -89,32 +91,36 @@ impl Notebook<'_> {
     }
 
     fn add(&mut self) {
-        let name: String = self.shell.ask("Name:\n  ");
-        let description: String = self.shell.ask("Description:\n  ");
+        // TODO reimplement with new vector logic
+        self.notes.remove("TODO");
+        // let name: String = self.shell.ask("Name:\n  ");
+        // let description: String = self.shell.ask("Description:\n  ");
 
-        self.notes.insert(
-            String::from(&name),
-            NotebookEntry {
-                name: name,
-                description: description,
-            },
-        );
+        // self.notes.insert(
+        //     String::from(&name),
+        //     NotebookEntry {
+        //         name: name,
+        //         description: description,
+        //     },
+        // );
     }
 
     fn remove(&mut self) {
-        self.shell.print("Name:\n  ");
-        let name: String = self.shell.get_input();
+        // TODO reimplement with new vector logic
+        self.notes.remove("TODO");
+        // self.shell.print("Name:\n  ");
+        // let name: String = self.shell.get_input();
 
-        if !self.notes.contains_key(&name) {
-            self.shell.print_buffered("Note '");
-            self.shell.print_buffered(&name);
-            self.shell.print("' does not exists.\n");
-        }
-        else {
-            self.notes.remove(&name);
-            self.shell.print_buffered(&name);
-            self.shell.print(" removed.\n");
-        }
+        // if !self.notes.contains_key(&name) {
+        //     self.shell.print_buffered("Note '");
+        //     self.shell.print_buffered(&name);
+        //     self.shell.print("' does not exists.\n");
+        // }
+        // else {
+        //     self.notes.remove(&name);
+        //     self.shell.print_buffered(&name);
+        //     self.shell.print(" removed.\n");
+        // }
     }
 
     // Session

@@ -8,9 +8,9 @@ pub struct ShellHandler {
 }
 
 impl ShellHandler {
-    pub fn is_cmd(&self, cmd: &String) -> bool {
+    pub fn is_cmd(&self, cmd: &Vec<String>) -> bool {
         for f in self.cmd_dict.iter() {
-            if f.name.eq(cmd) {
+            if f.name.eq(&cmd[0]) {
                 return true;
             }
         }

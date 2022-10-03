@@ -16,8 +16,8 @@ impl Nanoshell<'_> {
         self.print(self.title);
     }
 
-    pub fn run(&self) -> String {
-        let mut result: Option<String>;
+    pub fn run(&self) -> Vec<String> {
+        let mut result: Option<Vec<String>>;
         loop {
             result = self.handle_cmd(self.get_input());
             match result {
@@ -27,8 +27,8 @@ impl Nanoshell<'_> {
         }
     }
 
-    fn handle_cmd(&self, cmd: String) -> Option<String> {
-        match cmd.as_str() {
+    fn handle_cmd(&self, cmd: Vec<String>) -> Option<Vec<String>> {
+        match cmd[0].as_str() {
             "" => {},
             "exit" => return Some(cmd),
             "clear" => self.clear_screen(),
@@ -51,18 +51,26 @@ impl Nanoshell<'_> {
 
     // Input
 
-    pub fn get_input(&self) -> String {
+    pub fn get_input(&self) -> Vec<String> {
         let mut r = String::new();
         self.print(self.promt);
         io::stdin()
             .read_line(&mut r)
             .expect("Failed to read line");
         r = r[..r.len() - 1].to_string(); // Remove \n
-        r
+        
+        // TODO refactor into method
+        let split: Vec<&str> = r.split(" ").collect();
+        let mut input: Vec<String> = Vec::<String>::new();
+        for s in split {
+            input.push(String::from(s));
+        }
+        input
     }
 
-    pub fn ask(&self, question: &str) -> String {
+    pub fn ask(&self, question: &str) -> Vec<String> {
         self.print(question);
+        // TODO skip split?
         self.get_input()
     }
 
