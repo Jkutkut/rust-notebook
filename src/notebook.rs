@@ -91,36 +91,31 @@ impl Notebook<'_> {
     }
 
     fn add(&mut self) {
-        // TODO reimplement with new vector logic
-        self.notes.remove("TODO");
-        // let name: String = self.shell.ask("Name:\n  ");
-        // let description: String = self.shell.ask("Description:\n  ");
+        let name: String = self.shell.ask("Name:\n  ");
+        let description: String = self.shell.ask("Description:\n  ");
 
-        // self.notes.insert(
-        //     String::from(&name),
-        //     NotebookEntry {
-        //         name: name,
-        //         description: description,
-        //     },
-        // );
+        self.notes.insert(
+            String::from(&name),
+            NotebookEntry {
+                name: name,
+                description: description,
+            },
+        );
     }
 
     fn remove(&mut self) {
-        // TODO reimplement with new vector logic
-        self.notes.remove("TODO");
-        // self.shell.print("Name:\n  ");
-        // let name: String = self.shell.get_input();
+        let name: String = self.shell.ask("Name:\n  ");
 
-        // if !self.notes.contains_key(&name) {
-        //     self.shell.print_buffered("Note '");
-        //     self.shell.print_buffered(&name);
-        //     self.shell.print("' does not exists.\n");
-        // }
-        // else {
-        //     self.notes.remove(&name);
-        //     self.shell.print_buffered(&name);
-        //     self.shell.print(" removed.\n");
-        // }
+        if !self.notes.contains_key(&name) {
+            self.shell.print_buffered("Note '");
+            self.shell.print_buffered(&name);
+            self.shell.print("' does not exists.\n");
+        }
+        else {
+            self.notes.remove(&name);
+            self.shell.print_buffered(&name);
+            self.shell.print(" removed.\n");
+        }
     }
 
     // Session
