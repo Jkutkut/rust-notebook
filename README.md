@@ -37,12 +37,14 @@ You can also use ```cargo run``` to build and run directly the program.
 - [x] v1.1.0 - Define new data logic to have categories and subcategories.
 	- With a simple SQliteDB
 - [x] v1.2.0 - Define new command logic.
-- [ ] v1.3.0 - Implement commands.
+- [x] v1.3.0 - Implement commands to work with DB.
 - [ ] v1.4.0 - Implement data logic.
 	- [ ] Data logic.
-	- [ ] Export json.
-	- [ ] Inport json.
+	- [ ] Export data.
+	- [ ] Import data.
 - [ ] v1.5.0 - Integrate commands with data logic.
+	- [ ] Integration with DB.
+	- [ ] Error handleling.
 - [ ] v1.6.0 - Multiline description.
 - [ ] v1.7.0 - Refactorization and remove TODOs.
 - [ ] v1.8.0 - Clear the screen on init.

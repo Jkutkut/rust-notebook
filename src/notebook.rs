@@ -82,6 +82,7 @@ impl Notebook<'_> {
     // Commands
 
     fn list(&self) {
+        // TODO implement with DB
         self.shell.print_buffered("List:\n--------------------------\n");
         for (_, entry) in &self.notes {
             self.shell.print_buffered("- ");
@@ -94,6 +95,7 @@ impl Notebook<'_> {
     }
 
     fn add(&mut self) {
+        // TODO implement with DB
         let name: String = self.shell.ask("Name:\n  ");
         let description: String = self.shell.ask("Description:\n  ");
 
@@ -107,6 +109,7 @@ impl Notebook<'_> {
     }
 
     fn remove(&mut self) {
+        // TODO implement with DB
         let name: String = self.shell.ask("Name:\n  ");
 
         if !self.notes.contains_key(&name) {
@@ -125,4 +128,6 @@ impl Notebook<'_> {
     fn save_session(&self) {
         notebook_save(self.file, &self.notes);
     }
+
+    // notebook_load
 }
