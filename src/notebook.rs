@@ -1,24 +1,12 @@
-use std::collections::HashMap;
-use serde::{Deserialize, Serialize};
-
 use ShellHandler;
 use crate::shell::shell_handler::FtDictEntry;
 use crate::shell::nanoshell::Nanoshell;
 
-use crate::notebook_json::notebook_save;
-use crate::notebook_json::notebook_load;
-
-// NotebookEntry
-#[derive(Serialize, Deserialize)]
-pub struct NotebookEntry {
-    pub name: String,
-    pub description: String,
-}
+use crate::notebook_sqlite::NotebookDB;
 
 // Notebook
 pub struct Notebook<'a> {
-    file: &'a str,
-    notes: HashMap<String, NotebookEntry>,
+    db: NotebookDB,   
     shell: Nanoshell<'a>,
 }
 
@@ -45,9 +33,8 @@ impl<'a> Notebook<'a> {
     }
 
     pub fn new(file: &'a str) -> Self {
-        let mut n = Notebook {
-            file: file,
-            notes: HashMap::new(),
+        let n = Notebook {
+            db: NotebookDB::new(file),
             shell: Nanoshell {
                 title: "Rust-Notebook\n\n",
                 promt: "\x1b[38;5;33m$>\x1b[0m ",
@@ -56,7 +43,6 @@ impl<'a> Notebook<'a> {
                 },
             },
         };
-        notebook_load(n.file, &mut n.notes);
         n
     }
 }
@@ -70,64 +56,28 @@ impl Notebook<'_> {
             cmd = self.shell.run();
             match cmd[0].as_str() {
                 "exit" => break,
-                "list" => self.list(),
-                "add" => self.add(),
-                "remove" => self.remove(),
+                "list" => self.list(cmd),
+                "add" => self.add(cmd),
+                "remove" => self.remove(cmd),
                 &_ => todo!(),
             }
         }
-        self.save_session();
     }
 
     // Commands
 
-    fn list(&self) {
+    fn list(&self, cmd: Vec<String>) {
         // TODO implement with DB
-        self.shell.print_buffered("List:\n--------------------------\n");
-        for (_, entry) in &self.notes {
-            self.shell.print_buffered("- ");
-            self.shell.print_buffered(&entry.name);
-            self.shell.print_buffered("\n  ");
-            self.shell.print_buffered(&entry.description);
-            self.shell.print_buffered("\n");
-        }
-        self.shell.print("--------------------------\n");
+        self.db.list(&cmd[1]);
     }
 
-    fn add(&mut self) {
+    fn add(&mut self, cmd: Vec<String>) {
         // TODO implement with DB
-        let name: String = self.shell.ask("Name:\n  ");
-        let description: String = self.shell.ask("Description:\n  ");
-
-        self.notes.insert(
-            String::from(&name),
-            NotebookEntry {
-                name: name,
-                description: description,
-            },
-        );
+        self.db.add(&cmd[1]);
     }
 
-    fn remove(&mut self) {
+    fn remove(&mut self, cmd: Vec<String>) {
         // TODO implement with DB
-        let name: String = self.shell.ask("Name:\n  ");
-
-        if !self.notes.contains_key(&name) {
-            self.shell.print_buffered("Note '");
-            self.shell.print_buffered(&name);
-            self.shell.print("' does not exists.\n");
-        }
-        else {
-            self.notes.remove(&name);
-            self.shell.print_buffered(&name);
-            self.shell.print(" removed.\n");
-        }
+        self.db.remove(&cmd[1]);
     }
-
-    // Session
-    fn save_session(&self) {
-        notebook_save(self.file, &self.notes);
-    }
-
-    // notebook_load
 }

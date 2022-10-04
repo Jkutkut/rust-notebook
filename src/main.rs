@@ -1,17 +1,16 @@
-extern crate serde;
-extern crate serde_json;
-
-use std::collections::HashMap;
+// extern crate serde;
+// extern crate serde_json;
+extern crate sqlx;
 
 mod notebook;
 use notebook::Notebook;
 
-mod notebook_json;
-
 mod shell;
 use shell::shell_handler::ShellHandler;
 
+mod notebook_sqlite;
+
 fn main() {
-    let mut nb: Notebook = Notebook::new("notebook.json");
+    let mut nb: Notebook = Notebook::new("sqlite://notebook.db");
     nb.run();
 }
