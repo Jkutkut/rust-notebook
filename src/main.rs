@@ -6,11 +6,11 @@ mod notebook;
 use notebook::Notebook;
 
 mod shell;
-use shell::shell_handler::ShellHandler;
 
 mod notebook_sqlite;
 
-fn main() {
-    let mut nb: Notebook = Notebook::new("sqlite://notebook.db");
+#[async_std::main]
+async fn main() {
+    let mut nb: Notebook = Notebook::new("sqlite://notebook.db").await;
     nb.run();
 }

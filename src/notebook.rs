@@ -1,7 +1,6 @@
-use ShellHandler;
+use crate::shell::shell_handler::ShellHandler;
 use crate::shell::shell_handler::FtDictEntry;
 use crate::shell::nanoshell::Nanoshell;
-
 use crate::notebook_sqlite::NotebookDB;
 
 // Notebook
@@ -32,9 +31,9 @@ impl<'a> Notebook<'a> {
         ]
     }
 
-    pub fn new(file: &'a str) -> Self {
+    pub async fn new(file: &'a str) -> Notebook {
         let n = Notebook {
-            db: NotebookDB::new(file),
+            db: NotebookDB::new(file).await,
             shell: Nanoshell {
                 title: "Rust-Notebook\n\n",
                 promt: "\x1b[38;5;33m$>\x1b[0m ",

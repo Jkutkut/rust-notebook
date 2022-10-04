@@ -1,4 +1,5 @@
 /target
 /db
 *.json
+*.db
 *.swp
