@@ -11,6 +11,6 @@ mod notebook_sqlite;
 
 #[async_std::main]
 async fn main() {
-    let mut nb: Notebook = Notebook::new("sqlite://notebook.db").await;
+    let mut nb: Notebook = Notebook::new("notebook.db").await;
     nb.run();
 }

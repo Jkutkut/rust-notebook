@@ -4,12 +4,14 @@ use std::fs;
 
 pub struct NotebookDB {
     pub file: String,
+    file_url: String,
 }
 
 impl NotebookDB {
     pub async fn new(file: &str) -> Self {
         let db: NotebookDB = NotebookDB {
-            file: String::from(file),
+            file: String::from("sqlite://") + file,
+            file_url: String::from(file), 
         };
         init_db(&db).await;
         db
@@ -42,12 +44,24 @@ async fn init_db(db: &NotebookDB) {
             Ok(script) => {
                 let pool = SqlitePool::connect(&db.file).await.unwrap();
                 let result = sqlx::query(&script).execute(&pool).await;   
-                pool.close().await; 
-                print!("Restored!\n  {:?}\n", result);
-                return;
+                pool.close().await;
+                match result {
+                    Ok(_) => print!("Restored!\n  {:?}\n", result),
+                    Err(e) => {
+                        let mut rm_err: String = String::from("");
+                        match fs::remove_file(&db.file_url) { // TODO refactor
+                            Ok(_) => (),
+                            Err(e) => {
+                                rm_err.push_str("\n\nAnother error ocurred:\n");
+                                rm_err.push_str(&e.to_string());
+                            }
+                        }
+                        panic!("The script to create the DB failed!\n\n{e}{rm_err}");
+                    },
+                }
             },
             Err(e) => {
-                // TODO remove the empty file
+                fs::remove_file(&db.file);
                 panic!("Not able to obtain the script to create the DB!\n{e}");
             },
         }
