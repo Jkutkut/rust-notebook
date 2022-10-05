@@ -13,7 +13,7 @@ impl NotebookDB {
             file: String::from("sqlite://") + file,
             file_url: String::from(file), 
         };
-        init_db(&db).await;
+        db.init_db().await;
         db
     }
 
@@ -24,6 +24,13 @@ impl NotebookDB {
 
     pub fn add(&self, category: &String) {
         // TODO
+        // let instances = SqlitePool::connect(&db_url).await.unwrap();
+        // let qry ="INSERT INTO settings (description) VALUES($1)";
+        // let result = sqlx::query(&qry).bind("testing").execute(&instances).await;
+
+        // instances.close().await;
+
+        // println!("{:?}", result);
         print!("Adding a {category}\n");
     }
 
@@ -33,48 +40,50 @@ impl NotebookDB {
     }
 }
 
-// Functions:
+// NotebookDB tools
+impl NotebookDB {
+    pub async fn init_db(&self) {
+        if !Sqlite::database_exists(&self.file).await.unwrap_or(false) {
+            print!("Creating new DB...\n");
+            Sqlite::create_database(&self.file).await.unwrap();
+            // TODO allow the script to be stored somewhere else.
+            let script_file = fs::read_to_string("docs/db.sql");
+            match script_file {
+                Ok(script) => {
+                    self.create_db(&script).await;
+                },
+                Err(e) => {
+                    self.init_db_fail(e.to_string());
+                },
+            }
+        }
+        else {
+            print!("Previous notes recovered.\n");
+            // TODO check database is correct.
+        }
+    }
 
-async fn init_db(db: &NotebookDB) {
-    if !Sqlite::database_exists(&db.file).await.unwrap_or(false) {
-        print!("Creating new DB...\n");
-        Sqlite::create_database(&db.file).await.unwrap();
-        let script_file = fs::read_to_string("docs/db.sql"); // TODO allow the script to be stored somewhere else.
-        match script_file {
-            Ok(script) => {
-                let pool = SqlitePool::connect(&db.file).await.unwrap();
-                let result = sqlx::query(&script).execute(&pool).await;   
-                pool.close().await;
-                match result {
-                    Ok(_) => print!("Restored!\n  {:?}\n", result),
-                    Err(e) => {
-                        let mut rm_err: String = String::from("");
-                        match fs::remove_file(&db.file_url) { // TODO refactor
-                            Ok(_) => (),
-                            Err(e) => {
-                                rm_err.push_str("\n\nAnother error ocurred:\n");
-                                rm_err.push_str(&e.to_string());
-                            }
-                        }
-                        panic!("The script to create the DB failed!\n\n{e}{rm_err}");
-                    },
-                }
-            },
+    async fn create_db(&self, script: &str) {
+        let pool = SqlitePool::connect(&self.file).await.unwrap();
+        let result = sqlx::query(&script).execute(&pool).await;   
+        pool.close().await;
+        match result {
+            Ok(_) => print!("Restored!\n  {:?}\n", result),
             Err(e) => {
-                fs::remove_file(&db.file);
-                panic!("Not able to obtain the script to create the DB!\n{e}");
+                self.init_db_fail(e.to_string());
             },
         }
     }
-    else {
-        print!("Previous notes recovered.\n");
-        // TODO check database is correct.
+
+    fn init_db_fail(&self, error: String) {
+        let mut rm_err: String = String::new();
+        match fs::remove_file(&self.file_url) {
+            Ok(_) => (),
+            Err(e) => {
+                rm_err.push_str("\n\nAnother error ocurred:\n");
+                rm_err.push_str(&e.to_string());
+            }
+        }
+        panic!("The script to create the DB failed!\n\n{error}{rm_err}");
     }
-    // let instances = SqlitePool::connect(&db_url).await.unwrap();
-    // let qry ="INSERT INTO settings (description) VALUES($1)";
-    // let result = sqlx::query(&qry).bind("testing").execute(&instances).await;
-
-    // instances.close().await;
-
-    // println!("{:?}", result);
 }

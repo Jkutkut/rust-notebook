@@ -40,7 +40,7 @@ You can also use ```cargo run``` to build and run directly the program.
 - [x] v1.3.0 - Implement commands to work with DB.
 - [ ] v1.4.0 - Implement data logic.
 	- [ ] Data logic.
-	- [ ] Export data.
+	- [x] Export data.
 	- [ ] Import data.
 - [ ] v1.5.0 - Integrate commands with data logic.
 	- [ ] Integration with DB.
