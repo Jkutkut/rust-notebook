@@ -1,6 +1,8 @@
 use sqlx::{sqlite::SqliteQueryResult, Sqlite, SqlitePool, migrate::MigrateDatabase};
 
 use std::fs;
+use std::io;
+use std::io::Write;
 
 pub struct NotebookDB {
     pub file: String,
@@ -10,7 +12,7 @@ pub struct NotebookDB {
 impl NotebookDB {
     pub async fn new(file: &str) -> Self {
         let db: NotebookDB = NotebookDB {
-            file: String::from("sqlite://") + file,
+            file: String::from("sqlite:") + file,
             file_url: String::from(file), 
         };
         db.init_db().await;
@@ -44,7 +46,8 @@ impl NotebookDB {
 impl NotebookDB {
     pub async fn init_db(&self) {
         if !Sqlite::database_exists(&self.file).await.unwrap_or(false) {
-            print!("Creating new DB...\n");
+            print!("Creating new DB...");
+            io::stdout().flush().unwrap();
             Sqlite::create_database(&self.file).await.unwrap();
             // TODO allow the script to be stored somewhere else.
             let script_file = fs::read_to_string("docs/db.sql");
@@ -68,7 +71,7 @@ impl NotebookDB {
         let result = sqlx::query(&script).execute(&pool).await;   
         pool.close().await;
         match result {
-            Ok(_) => print!("Restored!\n  {:?}\n", result),
+            Ok(_) => print!("done!\n"),
             Err(e) => {
                 self.init_db_fail(e.to_string());
             },
@@ -84,6 +87,6 @@ impl NotebookDB {
                 rm_err.push_str(&e.to_string());
             }
         }
-        panic!("The script to create the DB failed!\n\n{error}{rm_err}");
+        panic!("\n\nThe script to create the DB failed!\n\n{error}{rm_err}");
     }
 }
