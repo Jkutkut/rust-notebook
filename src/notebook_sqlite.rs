@@ -62,7 +62,6 @@ impl NotebookDB {
         }
         else {
             print!("Previous notes recovered.\n");
-            // TODO check database is correct.
         }
     }
 

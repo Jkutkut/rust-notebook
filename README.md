@@ -38,10 +38,10 @@ You can also use ```cargo run``` to build and run directly the program.
 	- With a simple SQliteDB
 - [x] v1.2.0 - Define new command logic.
 - [x] v1.3.0 - Implement commands to work with DB.
-- [ ] v1.4.0 - Implement data logic.
+- [x] v1.4.0 - Implement data logic.
 	- [x] Data logic.
 	- [x] Export data.
-	- [ ] Import data.
+	- [x] Import data.
 - [ ] v1.5.0 - Integrate commands with data logic.
 	- [ ] Integration with DB.
 	- [ ] Error handleling.
