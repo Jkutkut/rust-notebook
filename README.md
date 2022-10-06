@@ -44,7 +44,7 @@ You can also use ```cargo run``` to build and run directly the program.
 	- [x] Import data.
 - [ ] v1.5.0 - Integrate commands with data logic.
 	- [ ] Integration with DB.
-	- [ ] Error handleling.
+	- [ ] Error handling.
 - [ ] v1.6.0 - Multiline description.
 - [ ] v1.7.0 - Refactorization and remove TODOs.
 - [ ] v1.8.0 - Clear the screen on init.

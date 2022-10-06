@@ -67,16 +67,28 @@ impl Notebook<'_> {
 
     fn list(&self, cmd: Vec<String>) {
         // TODO implement with DB
+        return self.cmd_error(cmd, "Not implemented yet");
         self.db.list(&cmd[1]);
     }
 
     fn add(&mut self, cmd: Vec<String>) {
         // TODO implement with DB
+        return self.cmd_error(cmd, "Not implemented yet");
         self.db.add(&cmd[1]);
     }
 
     fn remove(&mut self, cmd: Vec<String>) {
         // TODO implement with DB
+        return self.cmd_error(cmd, "Not implemented yet");
         self.db.remove(&cmd[1]);
+    }
+
+    // Error
+
+    fn cmd_error(&self, cmd: Vec<String>, error: &str) {
+        self.shell.print_buffered(cmd[0].as_str());
+        self.shell.print_buffered(": Error: ");
+        self.shell.print_buffered(error);
+        self.shell.print("\n\n");
     }
 }
