@@ -40,12 +40,16 @@ You can also use ```cargo run``` to build and run directly the program.
 - [x] v1.3.0 - Implement commands to work with DB.
 - [x] v1.4.0 - Implement data logic.
 	- [x] Data logic.
-	- [ ] Export data.
-	- [ ] Import data.
-- [ ] v1.5.0 - Integrate commands with data logic.
+	- [x] Export data.
+	- [x] Import data.
+- [ ] v1.5.0 - Refactor with sqlite crate.
+	- [ ] Refactor file and file_url.
+	- [ ] Be able to restore session again.
+	- [ ] Create DB script.
+- [ ] v1.6.0 - Integrate commands with data logic.
 	- [ ] Integration with DB.
 	- [ ] Error handling.
-- [ ] v1.6.0 - Multiline description.
-- [ ] v1.7.0 - Refactorization and remove TODOs.
-- [ ] v1.8.0 - Clear the screen on init.
+- [ ] v1.7.0 - Multiline description.
+- [ ] v1.8.0 - Refactorization and remove TODOs.
+- [ ] v1.9.0 - Clear the screen on init.
 - [ ] v2.0.0 - Documentation and final version.

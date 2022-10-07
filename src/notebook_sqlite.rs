@@ -65,7 +65,8 @@ impl NotebookDB {
             FROM NOTE N, CATEGORY C, TAG T
             WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID and C.CAT_NAME == 42;
         "; // TODO
-
+        
+        // TODO
         db.iterate(&qry, |note| {
             print!("********\n");
             for &(field, value) in note {
@@ -75,28 +76,6 @@ impl NotebookDB {
             true
         }).unwrap();
 
-        // match sqlx::query(&qry).execute(&db).await {
-        //     Ok(result) => {
-        //         print!("\n\n{:?}\n\n", result);
-        //         // TODO
-
-        //         // loop {
-        //         //     let r = result.try_next().await;
-
-        //         //     print!("{:?}", r);
-        //         // }
-
-        //         self.close_db(&db).await;
-        //         Err(String::from("Not implemented"))
-        //     }
-        //     Err(e) => {
-        //         self.close_db(&db).await;
-        //         Err(format!(
-        //             "Error obtaining notes from DB:\n  {}",
-        //             &e.to_string()
-        //         ))
-        //     }
-        // }
         Err(String::from("Not implemented"))
     }
 
