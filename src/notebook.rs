@@ -66,10 +66,10 @@ impl Notebook<'_> {
 
     // Commands
 
-    async fn execute_db_cmd(&self, cmd_result: Result<&str, &str>, cmd: Vec<String>) {
+    async fn execute_db_cmd(&self, cmd_result: Result<&str, String>, cmd: Vec<String>) {
         match cmd_result {
             Ok(msg) => self.shell.print(msg),
-            Err(e) => self.cmd_error(cmd, e),
+            Err(e) => self.cmd_error(cmd, &e),
         }
 
     }

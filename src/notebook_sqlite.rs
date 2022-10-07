@@ -38,9 +38,9 @@ impl NotebookDB {
 
     // List
 
-    pub async fn list_all(&self, table_type: &String) -> Result<&str, &str> {
+    pub async fn list_all(&self, table_type: &String) -> Result<&str, String> {
         if !self.is_valid_table(table_type, false) {
-            return Err("Use category or tag");
+            return Err(String::from("Use category or tag"));
         }
         print!("Listing by {table_type}\n");
         let db = self.open_db().await;
@@ -48,20 +48,45 @@ impl NotebookDB {
         // TODO
 
         self.close_db(&db).await;
-        Err("Not implemented")
+        Err(String::from("Not implemented"))
     }
 
-    pub async fn list(&self, table_type: &String, t: &String) -> Result<&str, &str>{
+    pub async fn list(&self, table_type: &String, t: &String) -> Result<&str, String>{
         if !self.is_valid_table(table_type, false) {
-            return Err("Use category or tag");
+            return Err(String::from("Use category or tag"));
         }
         print!("Listing {table_type} {t}\n");
         let db = self.open_db().await;
 
-        // TODO
+        let qry = "
+            SELECT N.NOTE_NAME AS 'NAME', N.NOTE_DESC AS 'DESCRIPTION',
+                C.CAT_NAME AS 'CATEGORY'
+            FROM NOTE N, CATEGORY C
+            WHERE N.CATEGORY_ID == C.ID and C.CAT_NAME == 42;
+        "; // TODO
 
-        self.close_db(&db).await;
-        Err("Not implemented")
+        match sqlx::query(&qry).execute(&db).await {
+            Ok(result) => {
+                print!("\n\n{:?}\n\n", result);
+                // TODO
+
+                // loop {
+                //     let r = result.try_next().await;
+
+                //     print!("{:?}", r);
+                // }
+
+                self.close_db(&db).await;
+                Err(String::from("Not implemented"))
+            }
+            Err(e) => {
+                self.close_db(&db).await;
+                Err(format!(
+                    "Error obtaining notes from DB:\n  {}",
+                    &e.to_string()
+                ))
+            }
+        }
     }
 
     // 
