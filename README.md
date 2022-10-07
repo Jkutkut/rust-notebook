@@ -42,10 +42,10 @@ You can also use ```cargo run``` to build and run directly the program.
 	- [x] Data logic.
 	- [x] Export data.
 	- [x] Import data.
-- [ ] v1.5.0 - Refactor with sqlite crate.
-	- [ ] Refactor file and file_url.
-	- [ ] Be able to restore session again.
-	- [ ] Create DB script.
+- [x] v1.5.0 - Refactor with sqlite crate.
+	- [x] Refactor file and file_url.
+	- [x] Be able to restore session again.
+	- [x] Create DB script.
 - [ ] v1.6.0 - Integrate commands with data logic.
 	- [ ] Integration with DB.
 	- [ ] Error handling.
