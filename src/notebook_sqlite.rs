@@ -1,4 +1,6 @@
-use sqlx::{sqlite::SqliteQueryResult, Sqlite, SqlitePool, migrate::MigrateDatabase};
+// use sqlx::{sqlite::SqliteQueryResult, Sqlite, SqlitePool, migrate::MigrateDatabase};
+
+
 
 use std::fs;
 use std::io;
@@ -10,22 +12,21 @@ pub struct NotebookDB {
 }
 
 impl NotebookDB {
-    pub async fn new(file: &str) -> Self {
+    pub fn new(file: &str) -> Self {
         let db: NotebookDB = NotebookDB {
             file: String::from("sqlite:") + file,
             file_url: String::from(file), 
         };
-        db.init_db().await;
+        db.init_db();
         db
     }
 
-    async fn open_db(&self) -> SqlitePool {
-        let db = SqlitePool::connect(&self.file).await.unwrap();
+    fn open_db(&self) -> sqlite::Connection {
+        let db = sqlite::open(&self.file_url).unwrap();
         db
     }
 
-    async fn close_db(&self, pool: &SqlitePool) {
-        pool.close().await;
+    fn close_db(&self) {
     }
 
     fn is_valid_table(&self, table_type: &String, check_note: bool) -> bool{
@@ -38,55 +39,65 @@ impl NotebookDB {
 
     // List
 
-    pub async fn list_all(&self, table_type: &String) -> Result<&str, String> {
+    pub fn list_all(&self, table_type: &String) -> Result<&str, String> {
         if !self.is_valid_table(table_type, false) {
             return Err(String::from("Use category or tag"));
         }
         print!("Listing by {table_type}\n");
-        let db = self.open_db().await;
+        let db = self.open_db();
 
         // TODO
 
-        self.close_db(&db).await;
+        // self.close_db(&db);
         Err(String::from("Not implemented"))
     }
 
-    pub async fn list(&self, table_type: &String, t: &String) -> Result<&str, String>{
+    pub fn list(&self, table_type: &String, t: &String) -> Result<&str, String>{
         if !self.is_valid_table(table_type, false) {
             return Err(String::from("Use category or tag"));
         }
         print!("Listing {table_type} {t}\n");
-        let db = self.open_db().await;
+        let db = self.open_db();
 
         let qry = "
-            SELECT N.NOTE_NAME AS 'NAME', N.NOTE_DESC AS 'DESCRIPTION',
-                C.CAT_NAME AS 'CATEGORY'
-            FROM NOTE N, CATEGORY C
-            WHERE N.CATEGORY_ID == C.ID and C.CAT_NAME == 42;
+            SELECT N.NOTE_NAME AS 'Name', N.NOTE_DESC AS 'Description',
+                C.CAT_NAME AS 'Category', T.TAG_NAME as 'Tag'
+            FROM NOTE N, CATEGORY C, TAG T
+            WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID and C.CAT_NAME == 42;
         "; // TODO
 
-        match sqlx::query(&qry).execute(&db).await {
-            Ok(result) => {
-                print!("\n\n{:?}\n\n", result);
-                // TODO
-
-                // loop {
-                //     let r = result.try_next().await;
-
-                //     print!("{:?}", r);
-                // }
-
-                self.close_db(&db).await;
-                Err(String::from("Not implemented"))
+        db.iterate(&qry, |note| {
+            print!("********\n");
+            for &(field, value) in note {
+                print!("{}: {:?}\n", field, value);
             }
-            Err(e) => {
-                self.close_db(&db).await;
-                Err(format!(
-                    "Error obtaining notes from DB:\n  {}",
-                    &e.to_string()
-                ))
-            }
-        }
+            print!("********\n");
+            true
+        }).unwrap();
+
+        // match sqlx::query(&qry).execute(&db).await {
+        //     Ok(result) => {
+        //         print!("\n\n{:?}\n\n", result);
+        //         // TODO
+
+        //         // loop {
+        //         //     let r = result.try_next().await;
+
+        //         //     print!("{:?}", r);
+        //         // }
+
+        //         self.close_db(&db).await;
+        //         Err(String::from("Not implemented"))
+        //     }
+        //     Err(e) => {
+        //         self.close_db(&db).await;
+        //         Err(format!(
+        //             "Error obtaining notes from DB:\n  {}",
+        //             &e.to_string()
+        //         ))
+        //     }
+        // }
+        Err(String::from("Not implemented"))
     }
 
     // 
@@ -110,37 +121,39 @@ impl NotebookDB {
 
 // NotebookDB tools
 impl NotebookDB {
-    pub async fn init_db(&self) {
-        if !Sqlite::database_exists(&self.file).await.unwrap_or(false) {
-            print!("Creating new DB...");
-            io::stdout().flush().unwrap();
-            Sqlite::create_database(&self.file).await.unwrap();
-            // TODO allow the script to be stored somewhere else.
-            let script_file = fs::read_to_string("docs/db.sql");
-            match script_file {
-                Ok(script) => {
-                    self.create_db(&script).await;
-                },
-                Err(e) => {
-                    self.init_db_fail(e.to_string());
-                },
-            }
-        }
-        else {
-            print!("Previous notes recovered.\n");
-        }
+    pub fn init_db(&self) {
+        // TODO reimplement
+        // if !Sqlite::database_exists(&self.file).await.unwrap_or(false) {
+        //     print!("Creating new DB...");
+        //     io::stdout().flush().unwrap();
+        //     Sqlite::create_database(&self.file).await.unwrap();
+        //     // TODO allow the script to be stored somewhere else.
+        //     let script_file = fs::read_to_string("docs/db.sql");
+        //     match script_file {
+        //         Ok(script) => {
+        //             self.create_db(&script).await;
+        //         },
+        //         Err(e) => {
+        //             self.init_db_fail(e.to_string());
+        //         },
+        //     }
+        // }
+        // else {
+        //     print!("Previous notes recovered.\n");
+        // }
     }
 
-    async fn create_db(&self, script: &str) {
-        let pool = SqlitePool::connect(&self.file).await.unwrap();
-        let result = sqlx::query(&script).execute(&pool).await;   
-        pool.close().await;
-        match result {
-            Ok(_) => print!("done!\n"),
-            Err(e) => {
-                self.init_db_fail(e.to_string());
-            },
-        }
+    fn create_db(&self, script: &str) {
+        // TODO reimplement
+        // let pool = SqlitePool::connect(&self.file).await.unwrap();
+        // let result = sqlx::query(&script).execute(&pool).await;   
+        // pool.close().await;
+        // match result {
+        //     Ok(_) => print!("done!\n"),
+        //     Err(e) => {
+        //         self.init_db_fail(e.to_string());
+        //     },
+        // }
     }
 
     fn init_db_fail(&self, error: String) {

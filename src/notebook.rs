@@ -31,9 +31,9 @@ impl<'a> Notebook<'a> {
         ]
     }
 
-    pub async fn new(file: &'a str) -> Notebook {
+    pub fn new(file: &'a str) -> Notebook {
         let n = Notebook {
-            db: NotebookDB::new(file).await,
+            db: NotebookDB::new(file),
             shell: Nanoshell {
                 title: "Rust-Notebook\n\n",
                 promt: "\x1b[38;5;33m$>\x1b[0m ",
@@ -48,16 +48,16 @@ impl<'a> Notebook<'a> {
 
 // Methods
 impl Notebook<'_> {
-    pub async fn run(&mut self) {
+    pub fn run(&mut self) {
         self.shell.init();
         let mut cmd: Vec<String>;
         loop {
             cmd = self.shell.run();
             match cmd[0].as_str() {
                 "exit" => break,
-                "list" => self.list(cmd).await,
-                "add" => self.add(cmd).await,
-                "remove" => self.remove(cmd).await,
+                "list" => self.list(cmd),
+                "add" => self.add(cmd),
+                "remove" => self.remove(cmd),
                 &_ => todo!(),
             }
         }
@@ -66,7 +66,7 @@ impl Notebook<'_> {
 
     // Commands
 
-    async fn execute_db_cmd(&self, cmd_result: Result<&str, String>, cmd: Vec<String>) {
+    fn execute_db_cmd(&self, cmd_result: Result<&str, String>, cmd: Vec<String>) {
         match cmd_result {
             Ok(msg) => self.shell.print(msg),
             Err(e) => self.cmd_error(cmd, &e),
@@ -74,21 +74,21 @@ impl Notebook<'_> {
 
     }
 
-    async fn list(&self, cmd: Vec<String>) {
+    fn list(&self, cmd: Vec<String>) {
         match cmd.len() {
             0 | 1 => self.cmd_error(cmd, "Enter the type desired"),
-            2 => self.execute_db_cmd(self.db.list_all(&cmd[1]).await, cmd).await,
-            3 => self.execute_db_cmd(self.db.list(&cmd[1], &cmd[2]).await, cmd).await,
+            2 => self.execute_db_cmd(self.db.list_all(&cmd[1]), cmd),
+            3 => self.execute_db_cmd(self.db.list(&cmd[1], &cmd[2]), cmd),
             _ => self.cmd_error(cmd, "Too many arguments"),
         }
     }
 
-    async fn add(&mut self, cmd: Vec<String>) {
+    fn add(&mut self, cmd: Vec<String>) {
         // TODO implement with DB
         return self.cmd_error(cmd, "Not implemented yet");
     }
 
-    async fn remove(&mut self, cmd: Vec<String>) {
+    fn remove(&mut self, cmd: Vec<String>) {
         // TODO implement with DB
         return self.cmd_error(cmd, "Not implemented yet");
     }
