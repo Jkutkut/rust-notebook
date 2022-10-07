@@ -28,20 +28,40 @@ impl NotebookDB {
         pool.close().await;
     }
 
+    fn is_valid_table(&self, table_type: &String, check_note: bool) -> bool{
+        match table_type.as_str() {
+            "category" | "tag" => true,
+            "note" => check_note,
+            _ => false
+        }
+    }
+
     // List
 
-    pub async fn list(&self, category: &String) -> Result<&str, &str>{
-        print!("Listing by {category}");
+    pub async fn list_all(&self, table_type: &String) -> Result<&str, &str> {
+        if !self.is_valid_table(table_type, false) {
+            return Err("Use category or tag");
+        }
+        print!("Listing by {table_type}\n");
         let db = self.open_db().await;
 
         // TODO
 
         self.close_db(&db).await;
-        Ok("")
+        Err("Not implemented")
     }
 
-    pub fn list_all(&self) {
+    pub async fn list(&self, table_type: &String, t: &String) -> Result<&str, &str>{
+        if !self.is_valid_table(table_type, false) {
+            return Err("Use category or tag");
+        }
+        print!("Listing {table_type} {t}\n");
+        let db = self.open_db().await;
 
+        // TODO
+
+        self.close_db(&db).await;
+        Err("Not implemented")
     }
 
     // 

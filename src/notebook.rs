@@ -77,8 +77,8 @@ impl Notebook<'_> {
     async fn list(&self, cmd: Vec<String>) {
         match cmd.len() {
             0 | 1 => self.cmd_error(cmd, "Enter the type desired"),
-            2 => self.execute_db_cmd(self.db.list(&cmd[1]).await, cmd).await,
-            3 => self.cmd_error(cmd, "Not implemented yet"),
+            2 => self.execute_db_cmd(self.db.list_all(&cmd[1]).await, cmd).await,
+            3 => self.execute_db_cmd(self.db.list(&cmd[1], &cmd[2]).await, cmd).await,
             _ => self.cmd_error(cmd, "Too many arguments"),
         }
     }
