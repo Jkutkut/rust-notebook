@@ -19,11 +19,32 @@ impl NotebookDB {
         db
     }
 
-    pub fn list(&self, category: &String) {
-        // TODO
-        print!("Listing by {category}");
+    async fn open_db(&self) -> SqlitePool {
+        let db = SqlitePool::connect(&self.file).await.unwrap();
+        db
     }
 
+    async fn close_db(&self, pool: &SqlitePool) {
+        pool.close().await;
+    }
+
+    // List
+
+    pub async fn list(&self, category: &String) -> Result<&str, &str>{
+        print!("Listing by {category}");
+        let db = self.open_db().await;
+
+        // TODO
+
+        self.close_db(&db).await;
+        Ok("")
+    }
+
+    pub fn list_all(&self) {
+
+    }
+
+    // 
     pub fn add(&self, category: &String) {
         // TODO
         // let instances = SqlitePool::connect(&db_url).await.unwrap();

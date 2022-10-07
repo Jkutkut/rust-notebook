@@ -25,5 +25,5 @@ async fn main() {
     }
     let file: &str = argv[1].as_str();
     let mut nb: Notebook = Notebook::new(file).await;
-    nb.run();
+    nb.run().await;
 }

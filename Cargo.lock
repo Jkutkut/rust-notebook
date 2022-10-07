@@ -898,7 +898,7 @@ dependencies = [
 
 [[package]]
 name = "rust-notebook"
-version = "1.4.0"
+version = "1.4.2"
 dependencies = [
  "async-std",
  "sqlx",

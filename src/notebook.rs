@@ -48,39 +48,49 @@ impl<'a> Notebook<'a> {
 
 // Methods
 impl Notebook<'_> {
-    pub fn run(&mut self) {
+    pub async fn run(&mut self) {
         self.shell.init();
         let mut cmd: Vec<String>;
         loop {
             cmd = self.shell.run();
             match cmd[0].as_str() {
                 "exit" => break,
-                "list" => self.list(cmd),
-                "add" => self.add(cmd),
-                "remove" => self.remove(cmd),
+                "list" => self.list(cmd).await,
+                "add" => self.add(cmd).await,
+                "remove" => self.remove(cmd).await,
                 &_ => todo!(),
             }
         }
+        self.shell.print("Exiting notebook\n");
     }
 
     // Commands
 
-    fn list(&self, cmd: Vec<String>) {
-        // TODO implement with DB
-        return self.cmd_error(cmd, "Not implemented yet");
-        self.db.list(&cmd[1]);
+    async fn execute_db_cmd(&self, cmd_result: Result<&str, &str>, cmd: Vec<String>) {
+        match cmd_result {
+            Ok(msg) => self.shell.print(msg),
+            Err(e) => self.cmd_error(cmd, e),
+        }
+
     }
 
-    fn add(&mut self, cmd: Vec<String>) {
-        // TODO implement with DB
-        return self.cmd_error(cmd, "Not implemented yet");
-        self.db.add(&cmd[1]);
+    async fn list(&self, cmd: Vec<String>) {
+        match cmd.len() {
+            0 | 1 => self.cmd_error(cmd, "Enter the type desired"),
+            2 => self.execute_db_cmd(self.db.list(&cmd[1]).await, cmd).await,
+            3 => self.cmd_error(cmd, "Not implemented yet"),
+            _ => self.cmd_error(cmd, "Too many arguments"),
+        }
     }
 
-    fn remove(&mut self, cmd: Vec<String>) {
+    async fn add(&mut self, cmd: Vec<String>) {
         // TODO implement with DB
         return self.cmd_error(cmd, "Not implemented yet");
-        self.db.remove(&cmd[1]);
+    }
+
+    async fn remove(&mut self, cmd: Vec<String>) {
+        // TODO implement with DB
+        return self.cmd_error(cmd, "Not implemented yet");
     }
 
     // Error
