@@ -39,25 +39,28 @@ impl NotebookDB {
             return Err(String::from("Use category or tag"));
         }
         print!("Listing {table_type} {t}\n");
+        // TODO implement table_type
+        
 
-        let qry = "
+        let mut statement = self.db.prepare("
             SELECT N.NOTE_NAME AS 'Name', N.NOTE_DESC AS 'Description',
                 C.CAT_NAME AS 'Category', T.TAG_NAME as 'Tag'
             FROM NOTE N, CATEGORY C, TAG T
-            WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID and C.CAT_NAME == 42;
-        "; // TODO
+            WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID and C.CAT_NAME == ?;
+        ").unwrap().bind(1, "42").unwrap();
         
-        // TODO
-        self.db.iterate(&qry, |note| {
-            print!("********\n");
-            for &(field, value) in note {
-                print!("{}: {:?}\n", field, value);
-            }
-            print!("********\n");
-            true
-        }).unwrap();
-
-        Err(String::from("Not implemented"))
+        while let Ok(sqlite::State::Row) = statement.next() {
+            print!("-----------\n");
+            print!(
+                "{}:     c: {} t: {}\n\n{}\n",
+                statement.read::<String>(0).unwrap(), // Name
+                statement.read::<String>(2).unwrap(), // Category
+                statement.read::<String>(3).unwrap(), // Tag
+                statement.read::<String>(1).unwrap() // Description
+            );
+            print!("-----------\n");
+        }
+        Err(String::from("Not fully implemented"))
     }
 
     // 
