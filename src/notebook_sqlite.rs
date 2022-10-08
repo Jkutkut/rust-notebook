@@ -13,8 +13,8 @@ impl NotebookDB {
         }
     }
 
-    fn is_valid_table(&self, table_type: &String, check_note: bool) -> bool{
-        match table_type.as_str() {
+    fn is_valid_table(&self, table_type: &str, check_note: bool) -> bool{
+        match table_type {
             "category" | "tag" => true,
             "note" => check_note,
             _ => false
@@ -23,32 +23,35 @@ impl NotebookDB {
 
     // List
 
-    pub fn list_all(&self, table_type: &String) -> Result<&str, String> {
-        if !self.is_valid_table(table_type, false) {
-            return Err(String::from("Use category or tag"));
-        }
-        print!("Listing by {table_type}\n");
-
+    pub fn list_all(&self, table_type: &str) -> Result<&str, String> {
         // TODO
-
         Err(String::from("Not implemented"))
     }
 
-    pub fn list(&self, table_type: &String, t: &String) -> Result<&str, String>{
-        if !self.is_valid_table(table_type, false) {
-            return Err(String::from("Use category or tag"));
+    pub fn list(&self, table_type: &str, t: &str) -> Result<&str, String> {
+        let mut statement;
+        match table_type {
+            "category" => {
+                statement = self.db.prepare("
+                    SELECT N.NOTE_NAME AS 'Name', N.NOTE_DESC AS 'Description',
+                        C.CAT_NAME AS 'Category', T.TAG_NAME as 'Tag'
+                    FROM NOTE N, CATEGORY C, TAG T
+                    WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID and
+                    UPPER(C.CAT_NAME) == UPPER(?);
+                ").unwrap().bind(1, t).unwrap();
+            },
+            "tag" => {
+                statement = self.db.prepare("
+                    SELECT N.NOTE_NAME AS 'Name', N.NOTE_DESC AS 'Description',
+                        C.CAT_NAME AS 'Category', T.TAG_NAME as 'Tag'
+                    FROM NOTE N, CATEGORY C, TAG T
+                    WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID and
+                    UPPER(T.TAG_NAME) == UPPER(?);
+                ").unwrap().bind(1, t).unwrap();
+            }
+            _ => return Err(String::from("Use category or tag")),
         }
         print!("Listing {table_type} {t}\n");
-        // TODO implement table_type
-        
-
-        let mut statement = self.db.prepare("
-            SELECT N.NOTE_NAME AS 'Name', N.NOTE_DESC AS 'Description',
-                C.CAT_NAME AS 'Category', T.TAG_NAME as 'Tag'
-            FROM NOTE N, CATEGORY C, TAG T
-            WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID and C.CAT_NAME == ?;
-        ").unwrap().bind(1, "42").unwrap();
-        
         while let Ok(sqlite::State::Row) = statement.next() {
             print!("-----------\n");
             print!(
