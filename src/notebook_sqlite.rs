@@ -1,6 +1,5 @@
 use std::fs;
 use std::io;
-use std::io::Write;
 
 pub struct NotebookDB {
     db: sqlite::Connection
@@ -13,22 +12,14 @@ impl NotebookDB {
         }
     }
 
-    fn is_valid_table(&self, table_type: &str, check_note: bool) -> bool{
-        match table_type {
-            "category" | "tag" => true,
-            "note" => check_note,
-            _ => false
-        }
-    }
-
     // List
 
-    pub fn list_all(&self, table_type: &str) -> Result<&str, String> {
+    pub fn list_all(&self, table_type: &str) -> Result<String, String> {
         // TODO
         Err(String::from("Not implemented"))
     }
 
-    pub fn list(&self, table_type: &str, t: &str) -> Result<&str, String> {
+    pub fn list(&self, table_type: &str, t: &str) -> Result<String, String> {
         let mut statement;
         match table_type {
             "category" => {
@@ -51,19 +42,22 @@ impl NotebookDB {
             }
             _ => return Err(String::from("Use category or tag")),
         }
-        print!("Listing {table_type} {t}\n");
+        let mut empty = true;
+        let mut result = String::from("Listing {table_type} {t}\n");
         while let Ok(sqlite::State::Row) = statement.next() {
-            print!("-----------\n");
-            print!(
-                "{}:     c: {} t: {}\n\n{}\n",
+            empty = false;
+            result += format!(
+                "----------\n{}:     c: {} t: {}\n\n{}\n----------\n",
                 statement.read::<String>(0).unwrap(), // Name
                 statement.read::<String>(2).unwrap(), // Category
                 statement.read::<String>(3).unwrap(), // Tag
                 statement.read::<String>(1).unwrap() // Description
-            );
-            print!("-----------\n");
+            ).as_str();
         }
-        Err(String::from("Not fully implemented"))
+        match empty {
+            true => Ok(String::from("Nothing found.\n")),
+            false => Ok(result),
+        }
     }
 
     // 
@@ -81,7 +75,6 @@ impl NotebookDB {
 // NotebookDB tools
 impl NotebookDB {
     pub fn new_db_connection(file: &str) -> sqlite::Connection {
-        let f = String::from(file);
         match std::path::Path::new(file).exists() {
             false => {
                 print!("Creating DB...");
