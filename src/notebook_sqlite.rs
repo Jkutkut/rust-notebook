@@ -80,7 +80,8 @@ impl NotebookDB {
         Ok(self.format_list(statement, format!("Listing {table_type} {t}\n")))
     }
 
-    // 
+    // Add
+
     pub fn add(&self, table_type: &String, t: &String) -> Result<String, String> {
         let query;
         match table_type.as_str() {
@@ -94,22 +95,32 @@ impl NotebookDB {
         Err(String::from("Not fully implemented"))
     }
 
+    fn get_id(&self, query: &str, f: &str) -> i64 {
+        let mut statement = self.db.prepare(query).unwrap().bind(1, f).unwrap();
+        statement.next().unwrap();
+        statement.read::<i64>(0).unwrap()
+    }
+
     pub fn add_note(&self, name: &str, description: &str,
                     category: &str, tag: &str) -> Result<String, String> {
+        let cat_id = self.get_id("SELECT ID FROM CATEGORY WHERE CAT_NAME = ?;", category);
+        if cat_id == 0 {
+            return Err(String::from("Category not found."));
+        }
+        let tag_id = self.get_id("SELECT ID FROM TAG WHERE TAG_NAME = ?;", tag);
+        if tag_id == 0 {
+            return Err(String::from("Tag not found."));
+        }
         let mut s = self.db.prepare("
-            INSERT INTO NOTE (NOTE_NAME, NOTE_DESC, CATEGORY_ID, TAG_ID) VALUES (
-                ?,
-                ?,
-                (SELECT ID FROM CATEGORY WHERE CAT_NAME = ?),
-                (SELECT ID FROM TAG WHERE TAG_NAME = ?)
-            );
-        ").unwrap()
+                INSERT INTO NOTE (NOTE_NAME, NOTE_DESC, CATEGORY_ID, TAG_ID)
+                VALUES (?, ?, ?, ?);
+            ").unwrap()
             .bind(1, name).unwrap()
             .bind(2, description).unwrap()
-            .bind(3, category).unwrap()
-            .bind(4, tag).unwrap();
+            .bind(3, cat_id).unwrap()
+            .bind(4, tag_id).unwrap();
         match s.next() {
-            Ok(_) => Ok(String::from("Note added.")),
+            Ok(_) => Ok(String::from("Note added.\n")),
             Err(e) => {
                 Err(e.to_string())
             },
