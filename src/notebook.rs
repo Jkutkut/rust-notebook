@@ -76,7 +76,7 @@ impl Notebook<'_> {
 
     fn list(&self, cmd: Vec<String>) {
         match cmd.len() {
-            0 | 1 => self.cmd_error(cmd, "Enter the type desired"),
+            1 => self.execute_db_cmd(self.db.list_all("all"), cmd),
             2 => self.execute_db_cmd(self.db.list_all(&cmd[1]), cmd),
             3 => self.execute_db_cmd(self.db.list(&cmd[1], &cmd[2]), cmd),
             _ => self.cmd_error(cmd, "Too many arguments"),

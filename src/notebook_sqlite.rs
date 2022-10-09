@@ -13,37 +13,10 @@ impl NotebookDB {
     }
 
     // List
-
-    pub fn list_all(&self, table_type: &str) -> Result<String, String> {
-        // TODO
-        Err(String::from("Not implemented"))
-    }
-
-    pub fn list(&self, table_type: &str, t: &str) -> Result<String, String> {
-        let mut statement;
-        match table_type {
-            "category" => {
-                statement = self.db.prepare("
-                    SELECT N.NOTE_NAME AS 'Name', N.NOTE_DESC AS 'Description',
-                        C.CAT_NAME AS 'Category', T.TAG_NAME as 'Tag'
-                    FROM NOTE N, CATEGORY C, TAG T
-                    WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID and
-                    UPPER(C.CAT_NAME) == UPPER(?);
-                ").unwrap().bind(1, t).unwrap();
-            },
-            "tag" => {
-                statement = self.db.prepare("
-                    SELECT N.NOTE_NAME AS 'Name', N.NOTE_DESC AS 'Description',
-                        C.CAT_NAME AS 'Category', T.TAG_NAME as 'Tag'
-                    FROM NOTE N, CATEGORY C, TAG T
-                    WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID and
-                    UPPER(T.TAG_NAME) == UPPER(?);
-                ").unwrap().bind(1, t).unwrap();
-            }
-            _ => return Err(String::from("Use category or tag")),
-        }
+    
+    fn format_list(&self, mut statement: sqlite::Statement, title: String) -> String {
         let mut empty = true;
-        let mut result = String::from("Listing {table_type} {t}\n");
+        let mut result = title;
         while let Ok(sqlite::State::Row) = statement.next() {
             empty = false;
             result += format!(
@@ -55,9 +28,57 @@ impl NotebookDB {
             ).as_str();
         }
         match empty {
-            true => Ok(String::from("Nothing found.\n")),
-            false => Ok(result),
+            true => String::from("Nothing found.\n"),
+            false => result,
         }
+    }
+
+    pub fn list_all(&self, table_type: &str) -> Result<String, String> {
+        let query;
+        match table_type {
+            "category" => query = " 
+                SELECT N.NOTE_NAME AS 'Name', N.NOTE_DESC AS 'Description',
+                    C.CAT_NAME AS 'Category', T.TAG_NAME as 'Tag'
+                FROM NOTE N, CATEGORY C, TAG T
+                WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID
+                ORDER BY C.CAT_NAME",
+            "tag" => query = "
+                SELECT N.NOTE_NAME AS 'Name', N.NOTE_DESC AS 'Description',
+                    C.CAT_NAME AS 'Category', T.TAG_NAME as 'Tag'
+                FROM NOTE N, CATEGORY C, TAG T
+                WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID
+                ORDER BY T.TAG_NAME;",
+            "all" => query = "
+                SELECT N.NOTE_NAME AS 'Name', N.NOTE_DESC AS 'Description',
+                    C.CAT_NAME AS 'Category', T.TAG_NAME as 'Tag'
+                FROM NOTE N, CATEGORY C, TAG T
+                WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID
+                ORDER BY N.NOTE_NAME;",
+            _ => return Err(String::from("Use category or tag")),
+        }
+        let statement = self.db.prepare(query).unwrap();
+        Ok(self.format_list(statement, format!("Listing notes by {table_type}\n")))
+    }
+
+    pub fn list(&self, table_type: &str, t: &str) -> Result<String, String> {
+        let query;
+        match table_type {
+            "category" => query = " 
+                SELECT N.NOTE_NAME AS 'Name', N.NOTE_DESC AS 'Description',
+                    C.CAT_NAME AS 'Category', T.TAG_NAME as 'Tag'
+                FROM NOTE N, CATEGORY C, TAG T
+                WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID and
+                UPPER(C.CAT_NAME) == UPPER(?);",
+            "tag" => query = "
+                SELECT N.NOTE_NAME AS 'Name', N.NOTE_DESC AS 'Description',
+                    C.CAT_NAME AS 'Category', T.TAG_NAME as 'Tag'
+                FROM NOTE N, CATEGORY C, TAG T
+                WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID and
+                UPPER(T.TAG_NAME) == UPPER(?);",
+            _ => return Err(String::from("Use category or tag")),
+        }
+        let statement = self.db.prepare(query).unwrap().bind(1, t).unwrap();
+        Ok(self.format_list(statement, format!("Listing {table_type} {t}\n")))
     }
 
     // 
