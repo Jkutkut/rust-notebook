@@ -12,7 +12,7 @@ pub struct Notebook<'a> {
 // Constructor
 impl<'a> Notebook<'a> {
     fn cmd_dict() -> Vec<FtDictEntry> {
-        vec![
+        vec![ // TODO update with commands.
             FtDictEntry {
                 name: String::from("list"),
                 cmd: String::from("list <category|tag> [CATEGORY|TAG]"),
@@ -84,8 +84,29 @@ impl Notebook<'_> {
     }
 
     fn add(&mut self, cmd: Vec<String>) {
-        // TODO implement with DB
-        return self.cmd_error(cmd, "Not implemented yet");
+        match cmd.len() {
+            1 => self.cmd_error(cmd, "What do you want to add?"),
+            2 => {
+                match cmd[1].as_str() {
+                    "note" => {
+                        // TODO use advanced ask functions
+                        let name = self.shell.ask("  Name: ");
+                        let desc = self.shell.ask("  Description: ");
+                        let category = self.shell.ask("  Category: ");
+                        let tag = self.shell.ask("  Tag: ");
+                        self.execute_db_cmd(self.db.add_note(&name, &desc, &category, &tag), cmd);
+                    },
+                    "category" | "tag" => {
+                        let question = format!("Name of the {}:\n  ", cmd[1]);
+                        let ele: String = self.shell.ask(&question);
+                        self.execute_db_cmd(self.db.add(&cmd[1], &ele), cmd);
+                    }
+                    _ => self.cmd_error(cmd, "Use note, category or tag."),
+                }
+           },
+           3 => self.execute_db_cmd(self.db.add(&cmd[1], &cmd[2]), cmd),
+            _ => self.cmd_error(cmd, "Too many arguments"),
+        }
     }
 
     fn remove(&mut self, cmd: Vec<String>) {

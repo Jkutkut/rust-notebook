@@ -1,6 +1,6 @@
 [package]
 name = "rust-notebook"
-version = "1.5.4"
+version = "1.5.5"
 authors = ["Jkutkut"]
 repository = "https://github.com/Jkutkut/rust-notebook"
 edition = "2021"

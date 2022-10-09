@@ -13,7 +13,9 @@ A simple, command used, notebook/agenda program to keep all your notes organized
 	- ```list tag <TAG>```: Shows the notes with a tag.
 - ```add```: Adds notes to DB.
 	- ```add note```: Adds a new note.
+	- ```add category XXXX```: Adds a new category called XXXX.
 	- ```add category```: Adds a new category.
+	- ```add tag XXXX```: Adds a new tag called XXXX.
 	- ```add tag```: Adds a new tag.
 - ```remove```: Removes a element by name.
 	- ```rm note```: Removes a note.

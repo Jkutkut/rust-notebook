@@ -1,5 +1,4 @@
 use std::fs;
-use std::io;
 
 pub struct NotebookDB {
     db: sqlite::Connection
@@ -82,9 +81,27 @@ impl NotebookDB {
     }
 
     // 
-    pub fn add(&self, category: &String) {
+    pub fn add(&self, table_type: &String, t: &String) -> Result<String, String> {
+        let query;
+        match table_type.as_str() {
+            "category" => query = "",
+            "tag" => query = "",
+            _ => return Err(String::from("Use category or tag")),
+        }
         // TODO
-        print!("Adding a {category}\n");
+        print!("Adding a {table_type}: {t}\n");
+        print!("{query}\n");
+        Err(String::from("Not fully implemented"))
+    }
+
+    pub fn add_note(&self, name: &String, description: &String,
+                    category: &String, tag: &String) -> Result<String, String> {
+        // TODO
+        // TODO Category integration
+        // TODO Tag integration
+        print!("Adding note: {}\n{}\n", name, description);
+        print!("{}  {}\n", category, tag);
+        Err(String::from("Not implemented"))
     }
 
     pub fn remove(&self, category: &String) {
