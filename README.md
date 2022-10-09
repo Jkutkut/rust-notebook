@@ -7,6 +7,8 @@ A simple, command used, notebook/agenda program to keep all your notes organized
 - ```clear```: Clear the terminal.
 - ```exit```: Exit the program.
 - ```list```: Shows all the notes.
+	- ```list categories```: Lists all categories.
+	- ```list tags```: Lists all categories.
 	- ```list category```: Shows the notes in all categories.
 	- ```list category <CATEGORY>```: Shows the notes in a category.
 	- ```list tag```: Shows the notes in all tags.

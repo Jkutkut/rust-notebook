@@ -53,6 +53,7 @@ impl NotebookDB {
                 FROM NOTE N, CATEGORY C, TAG T
                 WHERE N.CATEGORY_ID == C.ID and T.ID = N.TAG_ID
                 ORDER BY N.NOTE_NAME;",
+            "categories" | "tags" => return self.list_table(table_type),
             _ => return Err(String::from("Use category or tag")),
         }
         let statement = self.db.prepare(query).unwrap();
@@ -78,6 +79,29 @@ impl NotebookDB {
         }
         let statement = self.db.prepare(query).unwrap().bind(1, t).unwrap();
         Ok(self.format_list(statement, format!("Listing {table_type} {t}\n")))
+    }
+
+    pub fn list_table(&self, table_type: &str) -> Result<String, String> {
+        let query;
+        match table_type {
+            "categories" => {
+                query = "SELECT ID, CAT_NAME FROM CATEGORY ORDER BY CAT_NAME";
+            },
+            "tags" => {
+                query = "SELECT ID, TAG_NAME FROM TAG ORDER BY TAG_NAME";
+            },
+            _ => return Err(String::from("Use tags or categories")),
+        }
+        let mut result = format!("All {table_type}:\n");
+        let mut statement = self.db.prepare(query).unwrap();
+        while let Ok(sqlite::State::Row) = statement.next() {
+            result += format!(
+                "- {} ({})\n",
+                statement.read::<String>(1).unwrap(),
+                statement.read::<i64>(0).unwrap()
+            ).as_str();
+        }
+        Ok(result)
     }
 
     // Add
