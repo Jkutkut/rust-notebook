@@ -89,16 +89,15 @@ impl Notebook<'_> {
             2 => {
                 match cmd[1].as_str() {
                     "note" => {
-                        // TODO use advanced ask functions
-                        let name = self.shell.ask("  Name: ");
-                        let desc = self.shell.ask("  Description: ");
-                        let category = self.shell.ask("  Category: ");
-                        let tag = self.shell.ask("  Tag: ");
+                        let name = self.shell.ask_in_range("  Name: ", 1, 42);
+                        let desc = self.shell.ask_in_range("  Description: ", 5, 420);
+                        let category = self.shell.ask_or("  Category: ", String::from("UNCATEGORIZED"));
+                        let tag = self.shell.ask_or("  Tag: ", String::from("UNTAGGED"));
                         self.execute_db_cmd(self.db.add_note(&name, &desc, &category, &tag), cmd);
                     },
                     "category" | "tag" => {
                         let question = format!("Name of the {}:\n  ", cmd[1]);
-                        let ele: String = self.shell.ask(&question);
+                        let ele: String = self.shell.ask_in_range(&question, 1, 420);
                         self.execute_db_cmd(self.db.add(&cmd[1], &ele), cmd);
                     }
                     _ => self.cmd_error(cmd, "Use note, category or tag."),
