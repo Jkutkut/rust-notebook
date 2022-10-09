@@ -94,14 +94,26 @@ impl NotebookDB {
         Err(String::from("Not fully implemented"))
     }
 
-    pub fn add_note(&self, name: &String, description: &String,
-                    category: &String, tag: &String) -> Result<String, String> {
-        // TODO
-        // TODO Category integration
-        // TODO Tag integration
-        print!("Adding note: {}\n{}\n", name, description);
-        print!("{}  {}\n", category, tag);
-        Err(String::from("Not implemented"))
+    pub fn add_note(&self, name: &str, description: &str,
+                    category: &str, tag: &str) -> Result<String, String> {
+        let mut s = self.db.prepare("
+            INSERT INTO NOTE (NOTE_NAME, NOTE_DESC, CATEGORY_ID, TAG_ID) VALUES (
+                ?,
+                ?,
+                (SELECT ID FROM CATEGORY WHERE CAT_NAME = ?),
+                (SELECT ID FROM TAG WHERE TAG_NAME = ?)
+            );
+        ").unwrap()
+            .bind(1, name).unwrap()
+            .bind(2, description).unwrap()
+            .bind(3, category).unwrap()
+            .bind(4, tag).unwrap();
+        match s.next() {
+            Ok(_) => Ok(String::from("Note added.")),
+            Err(e) => {
+                Err(e.to_string())
+            },
+        }
     }
 
     pub fn remove(&self, category: &String) {
