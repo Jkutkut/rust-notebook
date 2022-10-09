@@ -57,7 +57,7 @@ impl Nanoshell<'_> {
         io::stdin()
             .read_line(&mut r)
             .expect("Failed to read line");
-        r = r[..r.len() - 1].to_string(); // Remove \n
+        r = r[..r.len() - 1].trim().to_string(); // Remove \n and trim it
         r
     }
 
@@ -76,6 +76,25 @@ impl Nanoshell<'_> {
         self.get_input()
     }
 
+    pub fn ask_in_range(&self, question: &str, min: usize, max: usize) -> String {
+        let mut r: String;
+        let error_len = format!("The response should have length in range [{min}, {max}]\n");
+        loop {
+            r = self.ask(question);
+            if r.len() >= min && r.len() <= max {
+                return r;
+            }
+            self.print(&error_len);
+        }
+    }
+
+    pub fn ask_or(&self, question: &str, default: String) -> String {
+        let r = self.ask(question);
+        match r.len() {
+            0 => default,
+            _ => r,
+        }
+    }
 
     // Output
 
