@@ -106,17 +106,18 @@ impl NotebookDB {
 
     // Add
 
-    pub fn add(&self, table_type: &String, t: &String) -> Result<String, String> {
+    pub fn add(&self, table_type: &str, t: &str) -> Result<String, String> {
         let query;
-        match table_type.as_str() {
-            "category" => query = "",
-            "tag" => query = "",
+        match table_type {
+            "category" => query = "INSERT INTO CATEGORY (CAT_NAME) VALUES (?);",
+            "tag" => query = "INSERT INTO TAG (TAG_NAME) VALUES (?);",
             _ => return Err(String::from("Use category or tag")),
         }
-        // TODO
-        print!("Adding a {table_type}: {t}\n");
-        print!("{query}\n");
-        Err(String::from("Not fully implemented"))
+        let mut statement = self.db.prepare(query).unwrap().bind(1, t).unwrap();
+        match statement.next() {
+            Ok(_) => Ok(format!("{t} added to the {table_type} list.\n")),
+            Err(e) => Err(format!("Not able to add {}:\n{}", t, e.to_string())),
+        }
     }
 
     fn get_id(&self, query: &str, f: &str) -> i64 {
