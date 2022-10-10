@@ -4,13 +4,13 @@ use crate::shell::nanoshell::Nanoshell;
 use crate::notebook_sqlite::NotebookDB;
 
 // Notebook
-pub struct Notebook<'a> {
+pub struct Notebook {
         db: NotebookDB,
-    shell: Nanoshell<'a>,
+    shell: Nanoshell,
 }
 
 // Constructor
-impl<'a> Notebook<'a> {
+impl Notebook {
     fn cmd_dict() -> Vec<FtDictEntry> {
         vec![
             FtDictEntry::new(
@@ -56,23 +56,22 @@ impl<'a> Notebook<'a> {
         ]
     }
 
-    pub fn new(file: &'a str) -> Notebook {
+    pub fn new(file: &str) -> Notebook {
         let n = Notebook {
             db: NotebookDB::new(file),
-            shell: Nanoshell {
-                title: "Rust-Notebook\n\n",
-                promt: "\x1b[38;5;33m$>\x1b[0m ",
-                cmd_handler: ShellHandler {
-                    cmd_dict: Notebook::cmd_dict(),
-                },
-            },
+            shell: Nanoshell::new(
+                String::from("Rust-Notebook\n\n"),
+                ShellHandler {
+                    cmd_dict: Notebook::cmd_dict()
+                }
+            )
         };
         n
     }
 }
 
 // Methods
-impl Notebook<'_> {
+impl Notebook {
     pub fn run(&mut self) {
         self.shell.init();
         let mut cmd: Vec<String>;

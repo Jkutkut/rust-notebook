@@ -2,18 +2,28 @@ use std::io;
 use std::io::Write;
 
 use super::shell_handler::ShellHandler;
+use super::colors;
 
-pub struct Nanoshell<'a> {
-    pub title: &'a str,
-    pub promt: &'a str,
+pub struct Nanoshell {
+    pub title: String,
+    pub promt: String,
     pub cmd_handler: ShellHandler,
 }
 
-impl Nanoshell<'_> {
+impl Nanoshell {
+
+    pub fn new(title: String, cmd_handler: ShellHandler) -> Self {
+        let n = Nanoshell {
+            title: title,
+            promt: format!("{}$>{} ", colors::BLUE, colors::NC),
+            cmd_handler: cmd_handler
+        };
+        n
+    }
 
     pub fn init(&self) {
-        //self.clear_screen(); // TODO remove
-        self.print(self.title);
+        //self.clear_screen();
+        self.print(&self.title);
     }
 
     pub fn run(&self) -> Vec<String> {
@@ -53,7 +63,7 @@ impl Nanoshell<'_> {
 
     fn get_input(&self) -> String {
         let mut r = String::new();
-        self.print(self.promt);
+        self.print(&self.promt);
         io::stdin()
             .read_line(&mut r)
             .expect("Failed to read line");
@@ -146,12 +156,11 @@ impl Nanoshell<'_> {
     }
 
     fn help_cmd(&self, name: &str, cmd: &str, man: &str) {
-        // TODO generalize COLORS
-        self.print_buffered("\x1b[0;33m");
+        self.print_buffered(colors::YELLOW);
         self.print_buffered(name);
-        self.print_buffered("\x1b[0m");
+        self.print_buffered(colors::NC);
         self.print_buffered("\n  ");
-        self.print_buffered(self.promt);
+        self.print_buffered(&self.promt);
         self.print_buffered(cmd);
         self.print_buffered("\n  ");
         self.print_buffered(man);
