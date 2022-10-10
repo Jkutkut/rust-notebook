@@ -36,8 +36,10 @@ Executable: ```target/release/rust-notebook```
 
 You can also use ```cargo run``` to build and run directly the program.
 
+Keep in mind you need to specify the location of the SQLite DB file in the first parameter.
 
-## TODO
+
+## Version history:
 - [x] v1.1.0 - Define new data logic to have categories and subcategories.
 	- With a simple SQliteDB
 - [x] v1.2.0 - Define new command logic.
@@ -58,4 +60,4 @@ You can also use ```cargo run``` to build and run directly the program.
 	- [x] TODOs.
 - [x] v1.8.0 - Multiline description.
 - [x] v1.9.0 - Title and clear the screen on init.
-- [ ] v2.0.0 - Documentation and final version.
+- [x] v2.0.0 - Documentation and final version.

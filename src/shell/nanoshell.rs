@@ -18,6 +18,7 @@ impl Nanoshell {
             promt: format!("{}$>{} ", colors::BLUE, colors::NC),
             cmd_handler: cmd_handler
         };
+        n.init();
         n
     }
 

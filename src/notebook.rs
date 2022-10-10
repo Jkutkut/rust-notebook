@@ -67,13 +67,13 @@ impl Notebook {
 
     pub fn new(file: &str) -> Notebook {
         let n = Notebook {
-            db: NotebookDB::new(file),
             shell: Nanoshell::new(
                 format!("{}{}{}\n\n\n", colors::NC, TITLE, colors::NC),
                 ShellHandler {
                     cmd_dict: Notebook::cmd_dict()
                 }
-            )
+            ),
+            db: NotebookDB::new(file),
         };
         n
     }
@@ -82,7 +82,6 @@ impl Notebook {
 // Methods
 impl Notebook {
     pub fn run(&mut self) {
-        self.shell.init();
         let mut cmd: Vec<String>;
         loop {
             cmd = self.shell.run();
