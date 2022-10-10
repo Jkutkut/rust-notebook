@@ -152,10 +152,29 @@ impl NotebookDB {
         }
     }
 
-    pub fn remove(&self, category: &String) {
-        // TODO
-        print!("Removing {category}\n");
+    pub fn remove(&self, table_type: &str, ele: &str) -> Result<String, String> {
+        let query;
+        match table_type {
+            "category" => query = "
+                DELETE FROM CATEGORY WHERE UPPER(CAT_NAME) = UPPER(?);
+            ",
+            "tag" => query = "
+                DELETE FROM TAG WHERE UPPER(TAG_NAME) = UPPER(?);
+            ",
+            "note" => query = "
+                DELETE FROM NOTE WHERE UPPER(NOTE_NAME) = UPPER(?);
+            ",
+            _ => return Err(String::from("Use category, tag or note.")),
+        }
+        let mut s = self.db.prepare(query).unwrap().bind(1, ele).unwrap();
+        match s.next() {
+            Ok(_) => Ok(format!("{} removed.", table_type)),
+            Err(e) => Ok(format!("There was an error removing the {}:\n  {}", table_type, e.to_string())),
+        }
     }
+
+    // TODO both result values should not have new line. Implementation will be done on the
+    // notebook.rs file
 }
 
 // NotebookDB tools

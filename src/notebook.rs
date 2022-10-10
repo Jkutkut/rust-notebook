@@ -68,7 +68,10 @@ impl Notebook<'_> {
 
     fn execute_db_cmd(&self, cmd_result: Result<String, String>, cmd: Vec<String>) {
         match cmd_result {
-            Ok(msg) => self.shell.print(&msg),
+            Ok(msg) => {
+                self.shell.print_buffered(&msg);
+                self.shell.print("\n");
+            },
             Err(e) => self.cmd_error(cmd, &e),
         }
 
@@ -109,8 +112,15 @@ impl Notebook<'_> {
     }
 
     fn remove(&mut self, cmd: Vec<String>) {
-        // TODO implement with DB
-        return self.cmd_error(cmd, "Not implemented yet");
+        match cmd.len() {
+            0 | 1 => self.cmd_error(cmd, "What do you want to remove?"),
+            2 => {
+                let ele = self.shell.ask("  Name: ");
+                self.execute_db_cmd(self.db.remove(&cmd[1], &ele), cmd);
+            }
+            3 => self.execute_db_cmd(self.db.remove(&cmd[1], &cmd[2]), cmd),
+            _ => self.cmd_error(cmd, "Too many arguments"),
+        }
     }
 
     // Error
