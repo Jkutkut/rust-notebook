@@ -1,4 +1,5 @@
 use std::fs;
+use crate::shell::colors;
 
 pub struct NotebookDB {
     db: sqlite::Connection
@@ -19,11 +20,22 @@ impl NotebookDB {
         while let Ok(sqlite::State::Row) = statement.next() {
             empty = false;
             result += format!(
-                "----------\n{}:     c: {} t: {}\n\n{}\n----------\n",
+                "{}────────────────────────────────────────────────────────────────────╮{}\n\
+                {}{}{}\n\n\
+                Description:\n\
+                {}\n\
+                Category: {} Tag: {}\n\
+                {}────────────────────────────────────────────────────────────────────╯{}\n",
+                colors::BLUE,
+                colors::NC,
+                colors::YELLOW,
                 statement.read::<String>(0).unwrap(), // Name
+                colors::NC,
+                statement.read::<String>(1).unwrap(), // Description
                 statement.read::<String>(2).unwrap(), // Category
                 statement.read::<String>(3).unwrap(), // Tag
-                statement.read::<String>(1).unwrap() // Description
+                colors::BLUE,
+                colors::NC,
             ).as_str();
         }
         match empty {
@@ -96,7 +108,9 @@ impl NotebookDB {
         let mut statement = self.db.prepare(query).unwrap();
         while let Ok(sqlite::State::Row) = statement.next() {
             result += format!(
-                "- {} ({})\n",
+                "{}-{} {} ({})\n",
+                colors::BLUE,
+                colors::NC,
                 statement.read::<String>(1).unwrap(),
                 statement.read::<i64>(0).unwrap()
             ).as_str();
