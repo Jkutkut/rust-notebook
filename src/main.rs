@@ -9,6 +9,8 @@ mod notebook_sqlite;
 
 use std::env;
 
+const DB_SCRIPT: &str = "docs/db.sql";
+
 fn main() {
     let argv: Vec<String> = env::args().collect();
     if argv.len() != 2 {

@@ -1,6 +1,8 @@
 use std::fs;
 use crate::shell::colors;
 
+use crate::DB_SCRIPT;
+
 pub struct NotebookDB {
     db: sqlite::Connection
 }
@@ -194,8 +196,12 @@ impl NotebookDB {
         match std::path::Path::new(file).exists() {
             false => {
                 print!("Creating DB...");
-                let db = sqlite::open(file).unwrap();
-                match fs::read_to_string("docs/db.sql") {
+                let db;
+                match sqlite::open(file) {
+                    Ok(c) => db = c,
+                    Err(_) => panic!("Not able to open the file."),
+                };
+                match fs::read_to_string(DB_SCRIPT) {
                     Err(e) => panic!("\nNot able to read the script:\n{}", e.to_string()),
                     Ok(script) => {
                         match db.execute(script) {
