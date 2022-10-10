@@ -112,7 +112,8 @@ impl Nanoshell {
     }
 
     pub fn ask_multiline(&self, question: &str, max: usize) -> String {
-        let mut r = self.ask(question);
+        self.print(question);
+        let mut r = String::new();
         let mut rr: String;
         loop {
             rr = self.get_raw_input();

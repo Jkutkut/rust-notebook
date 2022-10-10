@@ -200,7 +200,7 @@ impl NotebookDB {
                     Ok(script) => {
                         match db.execute(script) {
                             Ok(_) => {
-                                print!(" Done!\n");
+                                print!(" Done!\n\n");
                                 db
                             },
                             Err(e) => panic!("\nNot able to create DB:\n{}", e.to_string()),
@@ -212,7 +212,7 @@ impl NotebookDB {
                 print!("Restoring previous version...");
                 match sqlite::open(file) {
                     Ok(db) => {
-                        print!(" Done!\n");
+                        print!(" Done!\n\n");
                         db
                     }
                     Err(e) => panic!("\nNot able to restore the session:\n{}", e.to_string()),
