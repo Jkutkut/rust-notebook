@@ -14,7 +14,7 @@ impl Notebook {
     fn cmd_dict() -> Vec<FtDictEntry> {
         vec![
             FtDictEntry::new(
-                "list all",
+                "list",
                 "list",
                 "List all the notes."
             ),
@@ -117,7 +117,7 @@ impl Notebook {
                 match cmd[1].as_str() {
                     "note" => {
                         let name = self.shell.ask_in_range("  Name: ", 1, 42);
-                        let desc = self.shell.ask_in_range("  Description: ", 5, 420);
+                        let desc = self.shell.ask_multiline("  Description:\n", 420);
                         let category = self.shell.ask_or("  Category: ", String::from("UNCATEGORIZED"));
                         let tag = self.shell.ask_or("  Tag: ", String::from("UNTAGGED"));
                         self.execute_db_cmd(self.db.add_note(&name, &desc, &category, &tag), cmd);

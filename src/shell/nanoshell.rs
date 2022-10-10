@@ -61,14 +61,18 @@ impl Nanoshell {
 
     // Input
 
-    fn get_input(&self) -> String {
+    fn get_raw_input(&self) -> String {
         let mut r = String::new();
-        self.print(&self.promt);
         io::stdin()
             .read_line(&mut r)
             .expect("Failed to read line");
-        r = r[..r.len() - 1].trim().to_string(); // Remove \n and trim it
         r
+    }
+
+    fn get_input(&self) -> String {
+        self.print(&self.promt);
+        let r = self.get_raw_input();
+        r[..r.len() - 1].trim().to_string() // Remove \n and trim it
     }
 
     fn get_cmd(&self) -> Vec<String> {
@@ -103,6 +107,21 @@ impl Nanoshell {
         match r.len() {
             0 => default,
             _ => r,
+        }
+    }
+
+    pub fn ask_multiline(&self, question: &str, max: usize) -> String {
+        let mut r = self.ask(question);
+        let mut rr: String;
+        loop {
+            rr = self.get_raw_input();
+            if rr.len() <= 1 {
+                return r;
+            }
+            r += &rr;
+            if r.len() >= max {
+                return r[0..max].to_string();
+            }
         }
     }
 
