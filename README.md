@@ -50,9 +50,9 @@ You can also use ```cargo run``` to build and run directly the program.
 	- [x] Refactor file and file_url.
 	- [x] Be able to restore session again.
 	- [x] Create DB script.
-- [ ] v1.6.0 - Integrate commands with data logic.
-	- [ ] Integration with DB.
-	- [ ] Error handling.
+- [x] v1.6.0 - Integrate commands with data logic.
+	- [x] Integration with DB.
+	- [x] Error handling.
 - [ ] v1.7.0 - Multiline description.
 - [ ] v1.8.0 - Refactorization and remove TODOs.
 - [ ] v1.9.0 - Clear the screen on init.

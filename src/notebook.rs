@@ -126,9 +126,10 @@ impl Notebook<'_> {
     // Error
 
     fn cmd_error(&self, cmd: Vec<String>, error: &str) {
+        self.shell.print_buffered("Error in ");
         self.shell.print_buffered(cmd[0].as_str());
-        self.shell.print_buffered(": Error: ");
+        self.shell.print_buffered(": ");
         self.shell.print_buffered(error);
-        self.shell.print("\n\n");
+        self.shell.print("\n");
     }
 }

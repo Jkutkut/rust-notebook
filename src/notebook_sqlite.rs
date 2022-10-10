@@ -168,13 +168,10 @@ impl NotebookDB {
         }
         let mut s = self.db.prepare(query).unwrap().bind(1, ele).unwrap();
         match s.next() {
-            Ok(_) => Ok(format!("{} removed.", table_type)),
+            Ok(_) => Ok(format!("{} removed.\n", table_type)),
             Err(e) => Ok(format!("There was an error removing the {}:\n  {}", table_type, e.to_string())),
         }
     }
-
-    // TODO both result values should not have new line. Implementation will be done on the
-    // notebook.rs file
 }
 
 // NotebookDB tools
