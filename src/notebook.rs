@@ -5,7 +5,7 @@ use crate::notebook_sqlite::NotebookDB;
 
 // Notebook
 pub struct Notebook<'a> {
-    db: NotebookDB,   
+        db: NotebookDB,
     shell: Nanoshell<'a>,
 }
 
@@ -33,14 +33,24 @@ impl<'a> Notebook<'a> {
                 "list <category|tag> <CATEGORY|TAG>",
                 "Shows all the elements on the given category or tag."
             ),
-            FtDictEntry::new( // TODO
+            FtDictEntry::new(
+                "add",
                 "add <note|category|tag>",
-                "add <note|category|tag>",
-                "Adds the selected element."
+                "Opens a form to add the selected element."
             ),
             FtDictEntry::new(
+                "add category or tag directly",
+                "add <category|tag> <CATEGORY|TAG>",
+                "Adds the selected category or tag directly."
+            ),
+            FtDictEntry::new(
+                "remove",
                 "remove <note|category|tag>",
-                "remove <note|category|tag>",
+                "Removes the selected element by it's name."
+            ),
+            FtDictEntry::new(
+                "remove note, category or tag directly",
+                "remove <note|category|tag> <NAME>",
                 "Removes the selected element."
             )
         ]

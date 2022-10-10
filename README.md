@@ -54,7 +54,7 @@ You can also use ```cargo run``` to build and run directly the program.
 	- [x] Integration with DB.
 	- [x] Error handling.
 - [ ] v1.7.0 - Refactorization and remove TODOs.
-	- [ ] Help menu.
+	- [x] Help menu.
 	- [ ] TODOs.
 - [ ] v1.8.0 - Multiline description.
 - [ ] v1.9.0 - Clear the screen on init.
