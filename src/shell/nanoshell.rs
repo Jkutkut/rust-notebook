@@ -22,7 +22,7 @@ impl Nanoshell {
     }
 
     pub fn init(&self) {
-        //self.clear_screen();
+        self.clear_screen();
         self.print(&self.title);
     }
 

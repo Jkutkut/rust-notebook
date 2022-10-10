@@ -57,5 +57,5 @@ You can also use ```cargo run``` to build and run directly the program.
 	- [x] Help menu.
 	- [x] TODOs.
 - [x] v1.8.0 - Multiline description.
-- [ ] v1.9.0 - Clear the screen on init.
+- [x] v1.9.0 - Title and clear the screen on init.
 - [ ] v2.0.0 - Documentation and final version.

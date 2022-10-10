@@ -3,6 +3,15 @@ use crate::shell::shell_handler::FtDictEntry;
 use crate::shell::nanoshell::Nanoshell;
 use crate::notebook_sqlite::NotebookDB;
 
+use crate::shell::colors;
+
+const TITLE: &str = "
+███    ██  ██████  ████████ ███████ ██████   ██████   ██████  ██   ██ 
+████   ██ ██    ██    ██    ██      ██   ██ ██    ██ ██    ██ ██  ██  
+██ ██  ██ ██    ██    ██    █████   ██████  ██    ██ ██    ██ █████   
+██  ██ ██ ██    ██    ██    ██      ██   ██ ██    ██ ██    ██ ██  ██  
+██   ████  ██████     ██    ███████ ██████   ██████   ██████  ██   ██";
+
 // Notebook
 pub struct Notebook {
         db: NotebookDB,
@@ -60,7 +69,7 @@ impl Notebook {
         let n = Notebook {
             db: NotebookDB::new(file),
             shell: Nanoshell::new(
-                String::from("Rust-Notebook\n\n"),
+                format!("{}{}{}\n\n\n", colors::NC, TITLE, colors::NC),
                 ShellHandler {
                     cmd_dict: Notebook::cmd_dict()
                 }
