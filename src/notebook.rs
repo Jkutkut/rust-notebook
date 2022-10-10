@@ -12,22 +12,37 @@ pub struct Notebook<'a> {
 // Constructor
 impl<'a> Notebook<'a> {
     fn cmd_dict() -> Vec<FtDictEntry> {
-        vec![ // TODO update with commands.
-            FtDictEntry {
-                name: String::from("list"),
-                cmd: String::from("list <category|tag> [CATEGORY|TAG]"),
-                man: String::from("Shows all the notes by categories or by tags."),
-            },
-            FtDictEntry {
-                name: String::from("add"),
-                cmd: String::from("add <note|category|tag>"),
-                man: String::from("Adds the selected element."),
-            },
-            FtDictEntry {
-                name: String::from("remove"),
-                cmd: String::from("remove <note|category|tag>"),
-                man: String::from("Removes the selected element."),
-            },
+        vec![
+            FtDictEntry::new(
+                "list all",
+                "list",
+                "List all the notes."
+            ),
+            FtDictEntry::new(
+                "list all sorted by",
+                "list <category|tag>",
+                "Shows all the notes by category or by tag."
+            ),
+            FtDictEntry::new(
+                "list categories or tags",
+                "list <categories|tags>",
+                "Shows all the categories or tags."
+            ),
+            FtDictEntry::new(
+                "list specific category or tag",
+                "list <category|tag> <CATEGORY|TAG>",
+                "Shows all the elements on the given category or tag."
+            ),
+            FtDictEntry::new( // TODO
+                "add <note|category|tag>",
+                "add <note|category|tag>",
+                "Adds the selected element."
+            ),
+            FtDictEntry::new(
+                "remove <note|category|tag>",
+                "remove <note|category|tag>",
+                "Removes the selected element."
+            )
         ]
     }
 

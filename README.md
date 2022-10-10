@@ -53,7 +53,9 @@ You can also use ```cargo run``` to build and run directly the program.
 - [x] v1.6.0 - Integrate commands with data logic.
 	- [x] Integration with DB.
 	- [x] Error handling.
-- [ ] v1.7.0 - Multiline description.
-- [ ] v1.8.0 - Refactorization and remove TODOs.
+- [ ] v1.7.0 - Refactorization and remove TODOs.
+	- [ ] Help menu.
+	- [ ] TODOs.
+- [ ] v1.8.0 - Multiline description.
 - [ ] v1.9.0 - Clear the screen on init.
 - [ ] v2.0.0 - Documentation and final version.

@@ -4,6 +4,16 @@ pub struct FtDictEntry {
     pub man: String,
 }
 
+impl FtDictEntry {
+    pub fn new(name: &str, cmd: &str, man: &str) -> Self {
+        FtDictEntry {
+            name: String::from(name),
+            cmd: String::from(cmd),
+            man: String::from(man),
+        }
+    }
+}
+
 pub struct ShellHandler {
     pub cmd_dict: Vec<FtDictEntry>,
 }
