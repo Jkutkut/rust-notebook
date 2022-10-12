@@ -73,7 +73,7 @@ impl Nanoshell {
     fn get_input(&self) -> String {
         self.print(&self.promt);
         let r = self.get_raw_input();
-        r[..r.len() - 1].trim().to_string() // Remove \n and trim it
+        r.trim().to_string() // Remove \n and trim it
     }
 
     fn get_cmd(&self) -> Vec<String> {

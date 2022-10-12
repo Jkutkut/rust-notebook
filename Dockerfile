@@ -1,16 +1,24 @@
-# FROM rust:alpine3.15
-# FROM rust:alpine3.16
-# FROM rust:latest
-RUN rustup update
+FROM alpine:3.16
+
+RUN apk add --update	curl \
+						gcc \
+						musl-dev
+
+# Instalation of rust and cargo
+RUN curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh -s -- -y
+# RUN rustup update
+
 WORKDIR /app
-COPY ./rust-notebook/ .
-RUN cargo build --release
+COPY . .
+RUN $HOME/.cargo/bin/cargo build --release
 
 RUN mv ./target/release/rust-notebook .
-ENV RUST_BACKTRACE=full
-ENTRYPOINT ["./rust-notebook", "/db/notebook.db"]
 
-# FROM alpine:3.14
+# TODO Debug
+ENV RUST_BACKTRACE=full
+
+
+# FROM alpine:3.16
 # WORKDIR /app
-# COPY --from=builder /usr/local/cargo/bin/rust-notebook .
-# CMD ["./rust-notebook notebook.db"]
+# COPY --from=builder /app/rust-notebook .
+ENTRYPOINT ["./rust-notebook", "/db/notebook.db"]
