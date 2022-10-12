@@ -1,9 +1,8 @@
 [package]
 name = "rust-notebook"
-version = "2.0.3"
+version = "2.1.0"
 authors = ["Jkutkut"]
 repository = "https://github.com/Jkutkut/rust-notebook"
-edition = "2021"
 
 [dependencies]
 sqlite = "0.27.0"
