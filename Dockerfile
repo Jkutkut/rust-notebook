@@ -1,4 +1,4 @@
-FROM alpine:3.16
+FROM alpine:3.16 as builder
 
 RUN apk add --update	curl \
 						gcc \
@@ -15,10 +15,10 @@ RUN $HOME/.cargo/bin/cargo build --release
 RUN mv ./target/release/rust-notebook .
 
 # TODO Debug
-ENV RUST_BACKTRACE=full
+# ENV RUST_BACKTRACE=full
 
 
-# FROM alpine:3.16
-# WORKDIR /app
-# COPY --from=builder /app/rust-notebook .
+FROM alpine:3.16
+WORKDIR /app
+COPY --from=builder /app/rust-notebook .
 ENTRYPOINT ["./rust-notebook", "/db/notebook.db"]
