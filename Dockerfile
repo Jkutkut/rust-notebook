@@ -20,5 +20,6 @@ RUN mv ./target/release/rust-notebook .
 
 FROM alpine:3.16
 WORKDIR /app
+COPY --from=builder /app/docs/db.sql ./docs/
 COPY --from=builder /app/rust-notebook .
 ENTRYPOINT ["./rust-notebook", "/db/notebook.db"]

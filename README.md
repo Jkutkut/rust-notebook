@@ -38,6 +38,23 @@ You can also use ```cargo run``` to build and run directly the program.
 
 Keep in mind you need to specify the location of the SQLite DB file in the first parameter.
 
+### Docker image:
+In order to execute the program without installing Rust, you can use the Docker image.
+
+The docker file used to build the image is in the root of the project. However, you can use the image directly from Docker Hub.
+
+```
+docker pull jkutkut/rust-notebook
+```
+
+In order for the program to work, a location to store the SQLite DB file must be specified. The next command will create a Docker Volume to store the DB file when executing the container.
+
+```
+docker run -v rust-notebook-db:/db -i jkutkut/rust-notebook
+```
+
+Note: The implementation of the Docker image is just a proof of concept. The intended use is compiling the program.
+
 
 ## Version history:
 - [x] v1.1.0 - Define new data logic to have categories and subcategories.
@@ -61,3 +78,5 @@ Keep in mind you need to specify the location of the SQLite DB file in the first
 - [x] v1.8.0 - Multiline description.
 - [x] v1.9.0 - Title and clear the screen on init.
 - [x] v2.0.0 - Documentation and final version.
+- [x] v2.1.0 - First Docker image.
+- [x] v2.2.0 - Docker image integration with dockerhub.
