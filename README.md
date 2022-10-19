@@ -50,7 +50,7 @@ docker pull jkutkut/rust-notebook
 In order for the program to work, a location to store the SQLite DB file must be specified. The next command will create a Docker Volume to store the DB file when executing the container.
 
 ```
-docker run -v rust-notebook-db:/db -i jkutkut/rust-notebook
+docker run -v rust-notebook-db:/db -i --rm jkutkut/rust-notebook
 ```
 
 Note: The implementation of the Docker image is just a proof of concept. The intended use is compiling the program.
